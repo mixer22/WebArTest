@@ -1,48 +1,137 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <title>AR.js Interactive Example</title>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Станция: Робо-кроссворд</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #0f172a;
+      color: #e5e7eb;
+      display: flex;
+      justify-content: center;
+      padding: 20px;
+    }
 
-    <!-- A-Frame -->
-    <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+    .container {
+      max-width: 420px;
+      width: 100%;
+    }
 
-    <!-- AR.js -->
-    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.min.js"></script>
+    h1 {
+      text-align: center;
+      margin-bottom: 10px;
+    }
 
-    <style>
-      body, html { margin: 0; overflow: hidden; }
-    </style>
-  </head>
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 4px;
+      margin: 20px 0;
+    }
 
-  <body>
-    <a-scene
-      embedded
-      arjs="sourceType: webcam; debugUIEnabled: false;"
-    >
-      <!-- Маркер -->
-      <a-marker preset="hiro">
-        <!-- 3D-объект -->
-        <a-box
-          id="box"
-          position="0 0.5 0"
-          color="red"
-          depth="1" height="1" width="1"
-        ></a-box>
-      </a-marker>
+    .cell {
+      width: 100%;
+      padding-top: 100%;
+      position: relative;
+      background: #1e293b;
+      border-radius: 6px;
+    }
 
-      <a-entity camera></a-entity>
-    </a-scene>
+    .cell input {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      font-size: 20px;
+      background: transparent;
+      border: none;
+      color: #e5e7eb;
+      text-transform: uppercase;
+    }
 
-    <script>
-      const box = document.querySelector('#box');
-      const colors = ["red", "blue", "green", "yellow", "purple"];
-      let i = 0;
+    .cell.final {
+      background: #2563eb;
+    }
 
-      box.addEventListener("click", () => {
-        i = (i + 1) % colors.length;
-        box.setAttribute("color", colors[i]);
-      });
-    </script>
-  </body>
+    .clues {
+      margin-top: 20px;
+    }
+
+    .clues p {
+      margin: 6px 0;
+      font-size: 14px;
+    }
+
+    .footer {
+      margin-top: 20px;
+      padding: 12px;
+      background: #020617;
+      border-radius: 8px;
+      font-size: 14px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>🤖 Робо-кроссворд</h1>
+  <p style="text-align:center;">Заполните слова и соберите финальное слово</p>
+
+  <div class="grid">
+    <!-- Row 1 -->
+    <div class="cell"><input maxlength="1"></div>
+    <div class="cell final"><input maxlength="1"></div>
+    <div class="cell"><input maxlength="1"></div>
+    <div class="cell"><input maxlength="1"></div>
+    <div class="cell"><input maxlength="1"></div>
+
+    <!-- Row 2 -->
+    <div class="cell"><input maxlength="1"></div>
+    <div class="cell final"><input maxlength="1"></div>
+    <div class="cell"><input maxlength="1"></div>
+    <div class="cell"><input maxlength="1"></div>
+    <div class="cell"><input maxlength="1"></div>
+
+    <!-- Row 3 -->
+    <div class="cell"><input maxlength="1"></div>
+    <div class="cell final"><input maxlength="1"></div>
+    <div class="cell"><input maxlength="1"></div>
+    <div class="cell"><input maxlength="1"></div>
+    <div class="cell"><input maxlength="1"></div>
+
+    <!-- Row 4 -->
+    <div class="cell"><input maxlength="1"></div>
+    <div class="cell final"><input maxlength="1"></div>
+    <div class="cell"><input maxlength="1"></div>
+    <div class="cell"><input maxlength="1"></div>
+    <div class="cell"><input maxlength="1"></div>
+
+    <!-- Row 5 -->
+    <div class="cell"><input maxlength="1"></div>
+    <div class="cell final"><input maxlength="1"></div>
+    <div class="cell"><input maxlength="1"></div>
+    <div class="cell"><input maxlength="1"></div>
+    <div class="cell"><input maxlength="1"></div>
+  </div>
+
+  <div class="clues">
+    <p><b>1.</b> Устройство, которое измеряет вращение (5 букв)</p>
+    <p><b>2.</b> Источник энергии для робота (5 букв)</p>
+    <p><b>3.</b> Часть робота, которая отвечает за движение (5 букв)</p>
+    <p><b>4.</b> Устройство для обнаружения объектов (5 букв)</p>
+    <p><b>5.</b> Электронный «мозг» робота (5 букв)</p>
+  </div>
+
+  <div class="footer">
+    🔐 Финальное слово состоит из выделенных синих клеток.<br>
+    Отправьте его в Telegram-бот.
+  </div>
+</div>
+
+</body>
 </html>
