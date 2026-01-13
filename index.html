@@ -16,6 +16,15 @@
       padding: 16px;
     }
 
+    .cell.correct {
+      background: #15803d !important;
+    }
+    
+    .cell.correct input {
+      color: #dcfce7;
+      font-weight: bold;
+    }
+
     .container {
       width: 100%;
       max-width: 420px;
@@ -170,7 +179,31 @@
 <script>
   const inputs = Array.from(document.querySelectorAll("input"));
 
-  inputs.forEach((input, index) => {
+  // правильные ответы по строкам
+  const answers = {
+    1: "ГИРОС",
+    2: "БАТАР",
+    3: "МОТОР",
+    4: "СЕНСО",
+    5: "ПЛАТА"
+  };
+
+  function checkRow(row) {
+    const rowInputs = inputs.filter(i => i.dataset.row === row);
+    const word = rowInputs.map(i => i.value.toUpperCase()).join("");
+
+    // если не все буквы введены — не проверяем
+    if (word.length !== answers[row].length || word.includes("")) return;
+
+    if (word === answers[row]) {
+      rowInputs.forEach(input => {
+        input.disabled = true;
+        input.parentElement.classList.add("correct");
+      });
+    }
+  }
+
+  inputs.forEach(input => {
     input.addEventListener("input", () => {
       const row = input.dataset.row;
       const sameRow = inputs.filter(i => i.dataset.row === row);
@@ -179,6 +212,8 @@
       if (input.value && pos < sameRow.length - 1) {
         sameRow[pos + 1].focus();
       }
+
+      checkRow(row);
     });
 
     input.addEventListener("keydown", (e) => {
