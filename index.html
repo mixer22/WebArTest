@@ -1,233 +1,211 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <title>Станция: Робо-кроссворд</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta charset="UTF-8">
+<title>Робо-кроссворд</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-      background: #0f172a;
-      color: #e5e7eb;
-      display: flex;
-      justify-content: center;
-      margin: 0;
-      padding: 16px;
-    }
+<style>
+body {
+  margin: 0;
+  padding: 16px;
+  background: radial-gradient(circle at top, #0f172a, #020617);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  color: #e5e7eb;
+  display: flex;
+  justify-content: center;
+}
 
-    .cell.correct {
-      background: #15803d !important;
-    }
-    
-    .cell.correct input {
-      color: #dcfce7;
-      font-weight: bold;
-    }
+.container {
+  width: 100%;
+  max-width: 420px;
+}
 
-    .container {
-      width: 100%;
-      max-width: 420px;
-    }
+h1 {
+  text-align: center;
+  font-size: 22px;
+  margin-bottom: 4px;
+}
 
-    h1 {
-      text-align: center;
-      font-size: 22px;
-      margin-bottom: 6px;
-    }
+.subtitle {
+  text-align: center;
+  font-size: 14px;
+  color: #94a3b8;
+}
 
-    .subtitle {
-      text-align: center;
-      font-size: 14px;
-      color: #94a3b8;
-    }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  margin: 24px 0;
+}
 
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 6px;
-      margin: 20px 0;
-    }
+.cell {
+  position: relative;
+  background: #1e293b;
+  border-radius: 14px;
+  aspect-ratio: 1 / 1;
+}
 
-    .cell {
-      position: relative;
-      background: #1e293b;
-      border-radius: 10px;
-      aspect-ratio: 1 / 1;
-    }
+.cell.final {
+  background: #2563eb;
+}
 
-    .cell.final {
-      background: #2563eb;
-    }
+.cell.correct {
+  background: #15803d !important;
+}
 
-    .cell input {
-      width: 100%;
-      height: 100%;
-      text-align: center;
-      font-size: clamp(18px, 6vw, 24px);
-      background: transparent;
-      border: none;
-      color: #e5e7eb;
-      text-transform: uppercase;
-      outline: none;
-      caret-color: transparent;
-    }
+.cell.correct input {
+  color: #dcfce7;
+  font-weight: 700;
+}
 
-    .number {
-      position: absolute;
-      top: 4px;
-      left: 6px;
-      font-size: 10px;
-      color: #94a3b8;
-      pointer-events: none;
-    }
+.cell input {
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  text-align: center;
+  font-size: clamp(20px, 6vw, 26px);
+  text-transform: uppercase;
+  color: #e5e7eb;
+}
 
-    .clues {
-      font-size: 14px;
-      line-height: 1.4;
-    }
+.number {
+  position: absolute;
+  top: 6px;
+  left: 8px;
+  font-size: 10px;
+  color: #94a3b8;
+  pointer-events: none;
+}
 
-    .clues p {
-      margin: 6px 0;
-    }
+.clues {
+  font-size: 14px;
+  line-height: 1.5;
+}
 
-    .footer {
-      margin-top: 16px;
-      padding: 12px;
-      background: #020617;
-      border-radius: 10px;
-      font-size: 14px;
-      text-align: center;
-    }
-  </style>
+.footer {
+  margin-top: 16px;
+  padding: 12px;
+  background: #020617;
+  border-radius: 12px;
+  text-align: center;
+  font-size: 14px;
+}
+</style>
 </head>
+
 <body>
-
 <div class="container">
-  <h1>🤖 Робо-кроссворд</h1>
-  <div class="subtitle">Заполните слова и соберите финальный ответ</div>
 
-  <!-- Каждая строка — отдельное слово -->
-  <div class="grid">
+<h1>🤖 Робо-кроссворд</h1>
+<div class="subtitle">Заполните слова и соберите финальный ответ</div>
 
-    <!-- Слово 1 -->
-    <div class="cell">
-      <span class="number">1</span>
-      <input maxlength="1" data-row="1">
-    </div>
-    <div class="cell final"><input maxlength="1" data-row="1"></div>
-    <div class="cell"><input maxlength="1" data-row="1"></div>
-    <div class="cell"><input maxlength="1" data-row="1"></div>
-    <div class="cell"><input maxlength="1" data-row="1"></div>
+<div class="grid">
 
-    <!-- Слово 2 -->
-    <div class="cell">
-      <span class="number">2</span>
-      <input maxlength="1" data-row="2">
-    </div>
-    <div class="cell final"><input maxlength="1" data-row="2"></div>
-    <div class="cell"><input maxlength="1" data-row="2"></div>
-    <div class="cell"><input maxlength="1" data-row="2"></div>
-    <div class="cell"><input maxlength="1" data-row="2"></div>
+<!-- 1 -->
+<div class="cell"><span class="number">1</span><input data-row="1"></div>
+<div class="cell"><input data-row="1"></div>
+<div class="cell final"><input data-row="1"></div>
+<div class="cell"><input data-row="1"></div>
+<div class="cell"><input data-row="1"></div>
 
-    <!-- Слово 3 -->
-    <div class="cell">
-      <span class="number">3</span>
-      <input maxlength="1" data-row="3">
-    </div>
-    <div class="cell final"><input maxlength="1" data-row="3"></div>
-    <div class="cell"><input maxlength="1" data-row="3"></div>
-    <div class="cell"><input maxlength="1" data-row="3"></div>
-    <div class="cell"><input maxlength="1" data-row="3"></div>
+<!-- 2 -->
+<div class="cell"><span class="number">2</span><input data-row="2"></div>
+<div class="cell"><input data-row="2"></div>
+<div class="cell final"><input data-row="2"></div>
+<div class="cell"><input data-row="2"></div>
+<div class="cell"><input data-row="2"></div>
 
-    <!-- Слово 4 -->
-    <div class="cell">
-      <span class="number">4</span>
-      <input maxlength="1" data-row="4">
-    </div>
-    <div class="cell final"><input maxlength="1" data-row="4"></div>
-    <div class="cell"><input maxlength="1" data-row="4"></div>
-    <div class="cell"><input maxlength="1" data-row="4"></div>
-    <div class="cell"><input maxlength="1" data-row="4"></div>
+<!-- 3 -->
+<div class="cell"><span class="number">3</span><input data-row="3"></div>
+<div class="cell"><input data-row="3"></div>
+<div class="cell final"><input data-row="3"></div>
+<div class="cell"><input data-row="3"></div>
+<div class="cell"><input data-row="3"></div>
 
-    <!-- Слово 5 -->
-    <div class="cell">
-      <span class="number">5</span>
-      <input maxlength="1" data-row="5">
-    </div>
-    <div class="cell final"><input maxlength="1" data-row="5"></div>
-    <div class="cell"><input maxlength="1" data-row="5"></div>
-    <div class="cell"><input maxlength="1" data-row="5"></div>
-    <div class="cell"><input maxlength="1" data-row="5"></div>
+<!-- 4 -->
+<div class="cell"><span class="number">4</span><input data-row="4"></div>
+<div class="cell"><input data-row="4"></div>
+<div class="cell final"><input data-row="4"></div>
+<div class="cell"><input data-row="4"></div>
+<div class="cell"><input data-row="4"></div>
 
-  </div>
+<!-- 5 -->
+<div class="cell"><span class="number">5</span><input data-row="5"></div>
+<div class="cell"><input data-row="5"></div>
+<div class="cell final"><input data-row="5"></div>
+<div class="cell"><input data-row="5"></div>
+<div class="cell"><input data-row="5"></div>
 
-  <div class="clues">
-    <p><b>1.</b> Устройство, которое измеряет вращение</p>
-    <p><b>2.</b> Источник энергии для робота</p>
-    <p><b>3.</b> Часть робота, отвечающая за движение</p>
-    <p><b>4.</b> Устройство для обнаружения объектов</p>
-    <p><b>5.</b> Электронный «мозг» робота</p>
-  </div>
+</div>
 
-  <div class="footer">
-    🔐 Финальное слово состоит из <b>синих клеток</b><br>
-    Отправьте его в Telegram-бот
-  </div>
+<div class="clues">
+<p><b>1.</b> Устройство, которое измеряет вращение</p>
+<p><b>2.</b> Источник энергии для робота</p>
+<p><b>3.</b> Часть робота, отвечающая за движение</p>
+<p><b>4.</b> Устройство для обнаружения объектов</p>
+<p><b>5.</b> Электронный «мозг» робота</p>
+</div>
+
+<div class="footer">
+🔐 Финальное слово состоит из <b>синих клеток</b><br>
+Отправьте его в Telegram-бот
+</div>
+
 </div>
 
 <script>
-  const inputs = Array.from(document.querySelectorAll("input"));
+const answers = {
+  1: "ГИРОС",
+  2: "БАТАР",
+  3: "МОТОР",
+  4: "СЕНСО",
+  5: "ПЛАТА"
+};
 
-  // правильные ответы по строкам
-  const answers = {
-    1: "ГИРОС",
-    2: "БАТАР",
-    3: "МОТОР",
-    4: "СЕНСО",
-    5: "ПЛАТА"
-  };
+const inputs = [...document.querySelectorAll("input")];
 
-  function checkRow(row) {
+inputs.forEach(input => {
+  input.maxLength = 1;
+
+  input.addEventListener("input", () => {
+    const row = input.dataset.row;
     const rowInputs = inputs.filter(i => i.dataset.row === row);
-    const word = rowInputs.map(i => i.value.toUpperCase()).join("");
+    const index = rowInputs.indexOf(input);
 
-    // если не все буквы введены — не проверяем
-    if (word.length !== answers[row].length || word.includes("")) return;
-
-    if (word === answers[row]) {
-      rowInputs.forEach(input => {
-        input.disabled = true;
-        input.parentElement.classList.add("correct");
-      });
+    if (input.value && index < rowInputs.length - 1) {
+      rowInputs[index + 1].focus();
     }
-  }
 
-  inputs.forEach(input => {
-    input.addEventListener("input", () => {
-      const row = input.dataset.row;
-      const sameRow = inputs.filter(i => i.dataset.row === row);
-      const pos = sameRow.indexOf(input);
-
-      if (input.value && pos < sameRow.length - 1) {
-        sameRow[pos + 1].focus();
-      }
-
-      checkRow(row);
-    });
-
-    input.addEventListener("keydown", (e) => {
-      if (e.key === "Backspace" && !input.value) {
-        const row = input.dataset.row;
-        const sameRow = inputs.filter(i => i.dataset.row === row);
-        const pos = sameRow.indexOf(input);
-
-        if (pos > 0) {
-          sameRow[pos - 1].focus();
-        }
-      }
-    });
+    checkRow(row);
   });
+
+  input.addEventListener("keydown", e => {
+    if (e.key === "Backspace" && !input.value) {
+      const row = input.dataset.row;
+      const rowInputs = inputs.filter(i => i.dataset.row === row);
+      const index = rowInputs.indexOf(input);
+      if (index > 0) rowInputs[index - 1].focus();
+    }
+  });
+});
+
+function checkRow(row) {
+  const rowInputs = inputs.filter(i => i.dataset.row === row);
+  const word = rowInputs.map(i => i.value.toUpperCase()).join("");
+
+  if (word.length !== 5 || word.includes("")) return;
+
+  if (word === answers[row]) {
+    rowInputs.forEach(i => {
+      i.disabled = true;
+      i.parentElement.classList.add("correct");
+    });
+  }
+}
 </script>
 
 </body>
