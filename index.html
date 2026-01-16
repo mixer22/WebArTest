@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
+/* Базовые стили */
 body {
   margin: 0;
   padding: 16px;
@@ -27,32 +28,46 @@ body {
 
 h1 {
   text-align: center;
-  font-size: 22px;
+  font-size: clamp(20px, 5vw, 26px);
   margin-bottom: 4px;
 }
 
 .subtitle {
   text-align: center;
-  font-size: 14px;
+  font-size: clamp(12px, 3vw, 16px);
   color: #94a3b8;
+  margin-bottom: 16px;
 }
 
+/* Сетка кроссворда */
 .grid {
   display: grid;
-  grid-template-columns: repeat(8, 1fr); /* теперь все слова поместятся */
-  gap: 8px;
-  margin: 24px 0 32px;
+  gap: 6px;
+  margin: 16px 0 32px;
 }
 
-.cell.empty {
-  background: transparent; /* пустые клетки */
+/* Адаптивное количество колонок под максимальное слово */
+@media (min-width: 320px) {
+  .grid {
+    grid-template-columns: repeat(8, 1fr);
+  }
+}
+@media (min-width: 400px) {
+  .grid {
+    grid-template-columns: repeat(8, 1fr);
+  }
 }
 
+/* Клетки */
 .cell {
   position: relative;
   background: #1e293b;
-  border-radius: 14px;
+  border-radius: 12px;
   aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
 }
 
 .cell.final {
@@ -60,16 +75,11 @@ h1 {
 }
 
 .cell.correct {
-  background: #15803d !important; /* зеленый */
+  background: #15803d !important;
 }
 
 .cell.correct.final {
-  background: #2563eb !important; /* синий остаётся для финальных клеток */
-}
-
-.cell.correct input {
-  color: #dcfce7;
-  font-weight: 700;
+  background: #2563eb !important;
 }
 
 .cell input {
@@ -82,36 +92,56 @@ h1 {
   font-size: clamp(20px, 6vw, 26px);
   text-transform: uppercase;
   color: #e5e7eb;
+  font-weight: 700;
 }
 
+/* Стили для правильных букв */
+.cell.correct input {
+  color: #dcfce7;
+}
+
+.cell.empty {
+  background: transparent;
+}
+
+/* Номер клетки */
 .number {
   position: absolute;
-  top: 6px;
-  left: 8px;
-  font-size: 10px;
+  top: 2px;
+  left: 4px;
+  font-size: clamp(8px, 2.5vw, 12px);
   color: #94a3b8;
   pointer-events: none;
 }
 
-.clues {
-  font-size: 14px;
-  line-height: 1.5;
-}
-
+/* Подсказки */
 .clues-wrapper {
   margin-top: 16px;
 }
 
+.clues {
+  font-size: clamp(12px, 3vw, 14px);
+  line-height: 1.5;
+}
+
+/* Подвал */
 .footer {
   margin-top: 16px;
   padding: 12px;
   background: #020617;
   border-radius: 12px;
   text-align: center;
-  font-size: 14px;
+  font-size: clamp(12px, 3vw, 14px);
+}
+
+/* Подсветка фокуса */
+input:focus {
+  outline: 2px solid #2563eb;
+  outline-offset: -2px;
 }
 </style>
 </head>
+
 
 <body>
 <div class="container">
