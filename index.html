@@ -9,6 +9,7 @@
 body {
   margin: 0;
   padding: 16px;
+  padding-bottom: calc(16px + env(safe-area-inset-bottom));
   background: radial-gradient(circle at top, #0f172a, #020617);
   font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   color: #e5e7eb;
@@ -19,6 +20,9 @@ body {
 .container {
   width: 100%;
   max-width: 420px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 h1 {
@@ -37,7 +41,7 @@ h1 {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 8px;
-  margin: 24px 0;
+  margin: 24px 0 32px; /* ← ВАЖНО */
 }
 
 .cell {
@@ -84,6 +88,10 @@ h1 {
 .clues {
   font-size: 14px;
   line-height: 1.5;
+}
+
+.clues-wrapper {
+  margin-top: 16px;
 }
 
 .footer {
@@ -142,12 +150,14 @@ h1 {
 
 </div>
 
-<div class="clues">
-<p><b>1.</b> Устройство, которое измеряет вращение</p>
-<p><b>2.</b> Источник энергии для робота</p>
-<p><b>3.</b> Часть робота, отвечающая за движение</p>
-<p><b>4.</b> Устройство для обнаружения объектов</p>
-<p><b>5.</b> Электронный «мозг» робота</p>
+<div class="clues-wrapper">
+  <div class="clues">
+    <p>1. Устройство, которое измеряет вращение</p>
+    <p>2. Источник энергии для робота</p>
+    <p>3. Часть робота, отвечающая за движение</p>
+    <p>4. Устройство для обнаружения объектов</p>
+    <p>5. Электронный «мозг» робота</p>
+  </div>
 </div>
 
 <div class="footer">
