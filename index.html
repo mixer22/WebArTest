@@ -228,7 +228,7 @@ function checkRow(row) {
   const word = rowInputs.map(i => i.value.toUpperCase()).join("");
 
   // Если слово не полностью заполнено — ничего не делаем
-  if (word.includes("")) return;
+  if (rowInputs.some(i => i.value === "")) return;
 
   // Проверяем слово
   if (word === answers[row]) {
