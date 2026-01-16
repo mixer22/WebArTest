@@ -109,7 +109,7 @@ h1 {
 <div class="container">
 
 <h1>🤖 Робо-кроссворд</h1>
-<div class="subtitle">Заполните слова и соберите финальный ответ</div>
+<div class="subtitle">Заполните слова и соберите финальный ответ из выделенных букв</div>
 
 <div class="grid">
 
@@ -119,6 +119,10 @@ h1 {
 <div class="cell final"><input data-row="1"></div>
 <div class="cell"><input data-row="1"></div>
 <div class="cell"><input data-row="1"></div>
+<div class="cell"><input data-row="1"></div>
+<div class="cell"><input data-row="1"></div>
+<div class="cell"><input data-row="1"></div>
+<div class="cell"><input data-row="1"></div>  
 
 <!-- 2 -->
 <div class="cell"><span class="number">2</span><input data-row="2"></div>
@@ -126,11 +130,12 @@ h1 {
 <div class="cell final"><input data-row="2"></div>
 <div class="cell"><input data-row="2"></div>
 <div class="cell"><input data-row="2"></div>
+<div class="cell"><input data-row="2"></div>  
 
 <!-- 3 -->
 <div class="cell"><span class="number">3</span><input data-row="3"></div>
-<div class="cell"><input data-row="3"></div>
 <div class="cell final"><input data-row="3"></div>
+<div class="cell"><input data-row="3"></div>
 <div class="cell"><input data-row="3"></div>
 <div class="cell"><input data-row="3"></div>
 
@@ -140,23 +145,29 @@ h1 {
 <div class="cell final"><input data-row="4"></div>
 <div class="cell"><input data-row="4"></div>
 <div class="cell"><input data-row="4"></div>
+<div class="cell"><input data-row="4"></div>
+<div class="cell"><input data-row="4"></div>
+<div class="cell"><input data-row="4"></div>
+<div class="cell"><input data-row="4"></div>  
 
 <!-- 5 -->
-<div class="cell"><span class="number">5</span><input data-row="5"></div>
-<div class="cell"><input data-row="5"></div>
-<div class="cell final"><input data-row="5"></div>
+<div class="cell final"><span class="number">5</span><input data-row="5"></div>
 <div class="cell"><input data-row="5"></div>
 <div class="cell"><input data-row="5"></div>
-
+<div class="cell"><input data-row="5"></div>
+<div class="cell"><input data-row="5"></div>
+<div class="cell"><input data-row="5"></div>
+<div class="cell"><input data-row="5"></div>
+  
 </div>
 
 <div class="clues-wrapper">
   <div class="clues">
     <p>1. Устройство, которое измеряет вращение</p>
-    <p>2. Источник энергии для робота</p>
+    <p>2. Устройство, которое измеряет что-либо</p>
     <p>3. Часть робота, отвечающая за движение</p>
-    <p>4. Устройство для обнаружения объектов</p>
-    <p>5. Электронный «мозг» робота</p>
+    <p>4. Набор команд для робота или компьютера</p>
+    <p>5. Источник энергии для гаджетов</p>
   </div>
 </div>
 
@@ -169,11 +180,11 @@ h1 {
 
 <script>
 const answers = {
-  1: "ГИРОС",
-  2: "БАТАР",
+  1: "ГИРОСКОП",
+  2: "ДАТЧИК",
   3: "МОТОР",
-  4: "СЕНСО",
-  5: "ПЛАТА"
+  4: "ПРОГРАММА",
+  5: "БАТАРЕЯ"
 };
 
 const inputs = [...document.querySelectorAll("input")];
