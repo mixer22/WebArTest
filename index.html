@@ -60,7 +60,11 @@ h1 {
 }
 
 .cell.correct {
-  background: #15803d !important;
+  background: #15803d !important; /* зеленый */
+}
+
+.cell.correct.final {
+  background: #2563eb !important; /* синий остаётся для финальных клеток */
 }
 
 .cell.correct input {
@@ -224,12 +228,17 @@ function checkRow(row) {
   const rowInputs = inputs.filter(i => i.dataset.row === row);
   const word = rowInputs.map(i => i.value.toUpperCase()).join("");
 
-  if (word.length !== 5 || word.includes("")) return;
+  // Если слово не полностью заполнено — ничего не делаем
+  if (word.includes("")) return;
 
+  // Проверяем слово
   if (word === answers[row]) {
     rowInputs.forEach(i => {
-      i.disabled = true;
-      i.parentElement.classList.add("correct");
+      i.disabled = true; // запрет редактирования
+      // Если клетка не финальная (не синяя) — зеленая
+      if (!i.parentElement.classList.contains("final")) {
+        i.parentElement.classList.add("correct"); // зеленая
+      }
     });
   }
 }
