@@ -39,9 +39,13 @@ h1 {
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(8, 1fr); /* теперь все слова поместятся */
   gap: 8px;
-  margin: 24px 0 32px; /* ← ВАЖНО */
+  margin: 24px 0 32px;
+}
+
+.cell.empty {
+  background: transparent; /* пустые клетки */
 }
 
 .cell {
@@ -112,52 +116,55 @@ h1 {
 <div class="subtitle">Заполните слова и соберите финальный ответ из выделенных букв</div>
 
 <div class="grid">
+  <!-- 1. ГИРОСКОП -->
+  <div class="cell"><span class="number">1</span><input data-row="1"></div>
+  <div class="cell"><input data-row="1"></div>
+  <div class="cell final"><input data-row="1"></div>
+  <div class="cell"><input data-row="1"></div>
+  <div class="cell"><input data-row="1"></div>
+  <div class="cell"><input data-row="1"></div>
+  <div class="cell"><input data-row="1"></div>
+  <div class="cell"><input data-row="1"></div>
 
-<!-- 1 -->
-<div class="cell"><span class="number">1</span><input data-row="1"></div>
-<div class="cell"><input data-row="1"></div>
-<div class="cell final"><input data-row="1"></div>
-<div class="cell"><input data-row="1"></div>
-<div class="cell"><input data-row="1"></div>
-<div class="cell"><input data-row="1"></div>
-<div class="cell"><input data-row="1"></div>
-<div class="cell"><input data-row="1"></div>  
+  <!-- 2. ДАТЧИК -->
+  <div class="cell empty"></div>
+  <div class="cell empty"></div>
+  <div class="cell"><span class="number">2</span><input data-row="2"></div>
+  <div class="cell final"><input data-row="2"></div>
+  <div class="cell"><input data-row="2"></div>
+  <div class="cell"><input data-row="2"></div>
+  <div class="cell"><input data-row="2"></div>
+  <div class="cell"><input data-row="2"></div>
 
-<!-- 2 -->
-<div class="cell"><span class="number">2</span><input data-row="2"></div>
-<div class="cell"><input data-row="2"></div>
-<div class="cell final"><input data-row="2"></div>
-<div class="cell"><input data-row="2"></div>
-<div class="cell"><input data-row="2"></div>
-<div class="cell"><input data-row="2"></div>  
+  <!-- 3. МОТОР -->
+  <div class="cell empty"></div>
+  <div class="cell empty"></div>
+  <div class="cell empty"></div>
+  <div class="cell"><span class="number">3</span><input data-row="3"></div>
+  <div class="cell final"><input data-row="3"></div>
+  <div class="cell"><input data-row="3"></div>
+  <div class="cell"><input data-row="3"></div>
+  <div class="cell"><input data-row="3"></div>
 
-<!-- 3 -->
-<div class="cell"><span class="number">3</span><input data-row="3"></div>
-<div class="cell final"><input data-row="3"></div>
-<div class="cell"><input data-row="3"></div>
-<div class="cell"><input data-row="3"></div>
-<div class="cell"><input data-row="3"></div>
+  <!-- 4. ПРОГРАММА -->
+  <div class="cell"><span class="number">4</span><input data-row="4"></div>
+  <div class="cell"><input data-row="4"></div>
+  <div class="cell final"><input data-row="4"></div>
+  <div class="cell"><input data-row="4"></div>
+  <div class="cell"><input data-row="4"></div>
+  <div class="cell"><input data-row="4"></div>
+  <div class="cell"><input data-row="4"></div>
+  <div class="cell"><input data-row="4"></div>
 
-<!-- 4 -->
-<div class="cell"><span class="number">4</span><input data-row="4"></div>
-<div class="cell"><input data-row="4"></div>
-<div class="cell final"><input data-row="4"></div>
-<div class="cell"><input data-row="4"></div>
-<div class="cell"><input data-row="4"></div>
-<div class="cell"><input data-row="4"></div>
-<div class="cell"><input data-row="4"></div>
-<div class="cell"><input data-row="4"></div>
-<div class="cell"><input data-row="4"></div>  
-
-<!-- 5 -->
-<div class="cell final"><span class="number">5</span><input data-row="5"></div>
-<div class="cell"><input data-row="5"></div>
-<div class="cell"><input data-row="5"></div>
-<div class="cell"><input data-row="5"></div>
-<div class="cell"><input data-row="5"></div>
-<div class="cell"><input data-row="5"></div>
-<div class="cell"><input data-row="5"></div>
-  
+  <!-- 5. БАТАРЕЯ -->
+  <div class="cell empty"></div>
+  <div class="cell empty"></div>
+  <div class="cell empty"></div>
+  <div class="cell"><span class="number">5</span><input data-row="5"></div>
+  <div class="cell final"><input data-row="5"></div>
+  <div class="cell"><input data-row="5"></div>
+  <div class="cell"><input data-row="5"></div>
+  <div class="cell"><input data-row="5"></div>
 </div>
 
 <div class="clues-wrapper">
