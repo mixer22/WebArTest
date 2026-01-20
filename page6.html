@@ -164,7 +164,7 @@ function startDrag(e) {
       if(delta < -180) delta += 360;
       rotation += delta;
       blades.setAttribute("transform", `rotate(${rotation} 50 50)`);
-      increaseCharge(Math.abs(delta)*0.05); // заряд пропорционален вращению
+      increaseCharge(Math.abs(delta)*0.001); // заряд пропорционален вращению
     }
     lastAngle = angle;
   }
