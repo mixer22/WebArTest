@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Станция 3 — Датчики</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(160deg, #0f172a, #020617);
+            color: #e5e7eb;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .card {
+            width: 90%;
+            max-width: 420px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 20px;
+            padding: 22px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 22px;
+            margin-bottom: 12px;
+        }
+
+        .robot {
+            text-align: center;
+            font-size: 44px;
+            margin-bottom: 10px;
+        }
+
+        .story {
+            font-size: 15px;
+            line-height: 1.4;
+            margin-bottom: 16px;
+            text-align: center;
+            opacity: 0.95;
+        }
+
+        .table {
+            background: rgba(0, 0, 0, 0.35);
+            border-radius: 14px;
+            overflow: hidden;
+            margin-bottom: 18px;
+        }
+
+        .row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            font-size: 15px;
+        }
+
+        .row:last-child {
+            border-bottom: none;
+        }
+
+        .value {
+            font-weight: 600;
+            color: #7dd3fc;
+        }
+
+        .hint {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 14px;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .footer {
+            text-align: center;
+            font-size: 13px;
+            margin-top: 14px;
+            opacity: 0.75;
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <div class="robot">🤖</div>
+
+    <h1>Анализ датчиков</h1>
+
+    <div class="story">
+        Робот ехал вперёд и внезапно остановился.<br>
+        Проанализируйте показания датчиков и определите причину.
+    </div>
+
+    <div class="table">
+        <div class="row">
+            <div>📏 Датчик расстояния</div>
+            <div class="value">5 см</div>
+        </div>
+        <div class="row">
+            <div>💡 Датчик света</div>
+            <div class="value">Ярко</div>
+        </div>
+        <div class="row">
+            <div>🔘 Кнопка</div>
+            <div class="value">Не нажата</div>
+        </div>
+    </div>
+
+    <div class="hint">
+        🧠 Подумайте, какой датчик мог вызвать остановку робота.<br><br>
+        ✉️ Отправьте <b>название датчика</b> в Telegram-бот.
+    </div>
+
+    <div class="footer">
+        Станция №3 · РОБОСИБ
+    </div>
+</div>
+
+</body>
+</html>
