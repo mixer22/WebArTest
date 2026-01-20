@@ -1,216 +1,143 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Станция — Заряди аккумулятор</title>
+<meta charset="UTF-8">
+<title>Ветряная батарейка</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-    body {
-        margin: 0;
-        font-family: system-ui, sans-serif;
-        background: linear-gradient(#c7eaff, #eef9ff);
-        height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  background: #0f172a;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  color: #e5e7eb;
+}
 
-    .card {
-        width: 92%;
-        max-width: 420px;
-        background: #ffffffcc;
-        border-radius: 20px;
-        padding: 20px;
-        text-align: center;
-        box-shadow: 0 20px 40px rgba(0,0,0,0.25);
-    }
+h1 {
+  margin-bottom: 20px;
+  text-align: center;
+}
 
-    h1 {
-        margin-bottom: 10px;
-        font-size: 22px;
-    }
+/* Контейнер батарейки */
+.battery-container {
+  width: 80px;
+  height: 160px;
+  border: 4px solid #94a3b8;
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+  background: #1e293b;
+  margin-bottom: 30px;
+}
 
-    .battery {
-        width: 180px;
-        height: 60px;
-        border: 4px solid #111827;
-        border-radius: 10px;
-        margin: 16px auto;
-        position: relative;
-        overflow: hidden;
-    }
+/* Индикатор зарядки */
+.battery-fill {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 0%;
+  background: linear-gradient(180deg, #34d399, #059669);
+  transition: height 0.3s ease;
+  border-radius: 6px 6px 0 0;
+  box-shadow: 0 0 10px #34d39955 inset;
+}
 
-    .battery::after {
-        content: "";
-        position: absolute;
-        right: -14px;
-        top: 18px;
-        width: 10px;
-        height: 24px;
-        background: #111827;
-        border-radius: 3px;
-    }
+/* Контакт батарейки сверху */
+.battery-tip {
+  position: absolute;
+  top: -10px;
+  left: 25%;
+  width: 50%;
+  height: 10px;
+  background: #94a3b8;
+  border-radius: 4px 4px 0 0;
+}
 
-    .battery-fill {
-        height: 100%;
-        width: 0%;
-        background: linear-gradient(90deg, #22c55e, #4ade80);
-        transition: width 0.2s;
-    }
+/* Ветряная мельница */
+.windmill {
+  width: 100px;
+  height: 100px;
+  margin-bottom: 20px;
+  position: relative;
+}
 
-    .battery-text {
-        margin-top: 6px;
-        font-weight: 600;
-    }
+.blade {
+  width: 6px;
+  height: 50px;
+  background: #e5e7eb;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform-origin: bottom center;
+  border-radius: 3px;
+  transition: background 0.3s;
+}
 
-    .windmill {
-        margin: 30px auto 10px;
-        width: 120px;
-        height: 120px;
-        position: relative;
-        touch-action: none;
-    }
+.blade:nth-child(1) { transform: translate(-50%, -100%) rotate(0deg); }
+.blade:nth-child(2) { transform: translate(-50%, -100%) rotate(90deg); }
+.blade:nth-child(3) { transform: translate(-50%, -100%) rotate(180deg); }
+.blade:nth-child(4) { transform: translate(-50%, -100%) rotate(270deg); }
 
-    .blade {
-        position: absolute;
-        width: 50px;
-        height: 12px;
-        background: #4b5563;
-        top: 50%;
-        left: 50%;
-        transform-origin: left center;
-        border-radius: 6px;
-    }
+/* Кнопка крутить */
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+button:hover { background: #1d4ed8; }
 
-    .blade:nth-child(1) { transform: rotate(0deg) translateX(0); }
-    .blade:nth-child(2) { transform: rotate(90deg) translateX(0); }
-    .blade:nth-child(3) { transform: rotate(180deg) translateX(0); }
-    .blade:nth-child(4) { transform: rotate(270deg) translateX(0); }
-
-    .hub {
-        position: absolute;
-        width: 16px;
-        height: 16px;
-        background: #111827;
-        border-radius: 50%;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-    }
-
-    .hint {
-        font-size: 14px;
-        opacity: 0.8;
-        margin-top: 12px;
-    }
-
-    .answer {
-        margin-top: 16px;
-        font-size: 20px;
-        font-weight: 700;
-        color: #16a34a;
-        display: none;
-    }
 </style>
 </head>
 <body>
 
-<div class="card">
-    <h1>⚡ Заряди аккумулятор</h1>
+<h1>⚡ Заряди батарейку!</h1>
 
-    <div class="battery">
-        <div class="battery-fill" id="batteryFill"></div>
-    </div>
-    <div class="battery-text" id="batteryText">0%</div>
-
-    <div class="windmill" id="windmill">
-        <div class="blade"></div>
-        <div class="blade"></div>
-        <div class="blade"></div>
-        <div class="blade"></div>
-        <div class="hub"></div>
-    </div>
-
-    <div class="hint">
-        Покрути ветряную электростанцию, чтобы выработать энергию
-    </div>
-
-    <div class="answer" id="answer">
-        Слово-ответ: АККУМУЛЯТОР
-    </div>
+<div class="windmill">
+  <div class="blade"></div>
+  <div class="blade"></div>
+  <div class="blade"></div>
+  <div class="blade"></div>
 </div>
 
+<div class="battery-container">
+  <div class="battery-fill"></div>
+  <div class="battery-tip"></div>
+</div>
+
+<button id="spinBtn">Крутить мельницу</button>
+
 <script>
-    const windmill = document.getElementById("windmill");
-    const batteryFill = document.getElementById("batteryFill");
-    const batteryText = document.getElementById("batteryText");
-    const answer = document.getElementById("answer");
+const fill = document.querySelector(".battery-fill");
+const blades = document.querySelectorAll(".blade");
+let charge = 0; // уровень зарядки от 0 до 100
+let rotation = 0;
 
-    let rotation = 0;
-    let charge = 0;
-    let lastAngle = null;
+document.getElementById("spinBtn").addEventListener("click", () => {
+  // Вращаем мельницу
+  rotation += 45 + Math.random() * 90; // немного случайности
+  blades.forEach((blade, i) => {
+    blade.style.transform = `translate(-50%, -100%) rotate(${rotation + i*90}deg)`;
+  });
 
-    function getAngle(x, y, cx, cy) {
-        return Math.atan2(y - cy, x - cx) * 180 / Math.PI;
-    }
+  // Увеличиваем заряд батареи
+  charge += 10 + Math.random() * 15;
+  if(charge > 100) charge = 100;
 
-    function handleMove(x, y) {
-        const rect = windmill.getBoundingClientRect();
-        const cx = rect.left + rect.width / 2;
-        const cy = rect.top + rect.height / 2;
+  fill.style.height = charge + "%";
 
-        const angle = getAngle(x, y, cx, cy);
-
-        if (lastAngle !== null) {
-            let delta = angle - lastAngle;
-            if (delta > 180) delta -= 360;
-            if (delta < -180) delta += 360;
-
-            rotation += delta;
-            windmill.style.transform = `rotate(${rotation}deg)`;
-
-            charge = Math.min(100, charge + Math.abs(delta) * 0.05);
-            batteryFill.style.width = charge + "%";
-            batteryText.textContent = Math.floor(charge) + "%";
-
-            if (charge >= 100) {
-                answer.style.display = "block";
-            }
-        }
-
-        lastAngle = angle;
-    }
-
-    windmill.addEventListener("touchstart", e => {
-        const t = e.touches[0];
-        lastAngle = null;
-        handleMove(t.clientX, t.clientY);
-    });
-
-    windmill.addEventListener("touchmove", e => {
-        const t = e.touches[0];
-        handleMove(t.clientX, t.clientY);
-    });
-
-    windmill.addEventListener("touchend", () => lastAngle = null);
-
-    windmill.addEventListener("mousedown", e => {
-        lastAngle = null;
-        handleMove(e.clientX, e.clientY);
-        document.addEventListener("mousemove", mouseMove);
-        document.addEventListener("mouseup", stopMouse);
-    });
-
-    function mouseMove(e) {
-        handleMove(e.clientX, e.clientY);
-    }
-
-    function stopMouse() {
-        lastAngle = null;
-        document.removeEventListener("mousemove", mouseMove);
-        document.removeEventListener("mouseup", stopMouse);
-    }
+  // Визуальный эффект свечения при высокой зарядке
+  if(charge > 75) fill.style.boxShadow = "0 0 20px #34d399aa inset";
+});
 </script>
 
 </body>
