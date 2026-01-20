@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Станция 4 — Робо-квиз</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(160deg, #020617, #0f172a);
+            color: #e5e7eb;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .card {
+            width: 92%;
+            max-width: 440px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 20px;
+            padding: 22px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 22px;
+            margin-bottom: 16px;
+        }
+
+        .question {
+            margin-bottom: 18px;
+        }
+
+        .question-title {
+            font-size: 15px;
+            margin-bottom: 10px;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .option {
+            background: rgba(0, 0, 0, 0.35);
+            border-radius: 12px;
+            padding: 10px 14px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: 0.2s;
+            border: 2px solid transparent;
+        }
+
+        .option:hover {
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .option.selected {
+            border-color: #7dd3fc;
+            background: rgba(125, 211, 252, 0.15);
+        }
+
+        button {
+            width: 100%;
+            margin-top: 14px;
+            padding: 12px;
+            border: none;
+            border-radius: 14px;
+            background: #22c55e;
+            color: #022c22;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #16a34a;
+        }
+
+        .result {
+            margin-top: 16px;
+            text-align: center;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .success {
+            color: #4ade80;
+        }
+
+        .error {
+            color: #f87171;
+        }
+
+        .footer {
+            text-align: center;
+            font-size: 13px;
+            margin-top: 14px;
+            opacity: 0.75;
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h1>🤖 Робо-квиз</h1>
+
+    <div class="question" data-correct="2">
+        <div class="question-title">
+            1️⃣ Что является «мозгом» робота?
+        </div>
+        <div class="options">
+            <div class="option">Мотор</div>
+            <div class="option">Контроллер</div>
+            <div class="option">Батарейка</div>
+        </div>
+    </div>
+
+    <div class="question" data-correct="2">
+        <div class="question-title">
+            2️⃣ Что делает датчик расстояния?
+        </div>
+        <div class="options">
+            <div class="option">Измеряет свет</div>
+            <div class="option">Издаёт звук</div>
+            <div class="option">Определяет расстояние до объекта</div>
+        </div>
+    </div>
+
+    <div class="question" data-correct="3">
+        <div class="question-title">
+            3️⃣ Что такое алгоритм?
+        </div>
+        <div class="options">
+            <div class="option">Деталь робота</div>
+            <div class="option">Язык программирования</div>
+            <div class="option">Последовательность команд</div>
+        </div>
+    </div>
+
+    <button onclick="checkAnswers()">ПРОВЕРИТЬ</button>
+
+    <div id="result" class="result"></div>
+
+    <div class="footer">
+        Станция №4 · РОБОСИБ
+    </div>
+</div>
+
+<script>
+    document.querySelectorAll('.options').forEach(options => {
+        options.querySelectorAll('.option').forEach((option, index) => {
+            option.addEventListener('click', () => {
+                options.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+                option.classList.add('selected');
+                options.parentElement.dataset.selected = index + 1;
+            });
+        });
+    });
+
+    function checkAnswers() {
+        const questions = document.querySelectorAll('.question');
+        let correct = true;
+
+        questions.forEach(q => {
+            if (q.dataset.selected !== q.dataset.correct) {
+                correct = false;
+            }
+        });
+
+        const result = document.getElementById('result');
+
+        if (correct) {
+            result.innerHTML = '✅ Все ответы верны!<br><br>Слово-ответ: <b>АЛГОРИТМ</b>';
+            result.className = 'result success';
+        } else {
+            result.textContent = '❌ Есть ошибки. Проверьте ответы и попробуйте снова.';
+            result.className = 'result error';
+        }
+    }
+</script>
+
+</body>
+</html>
