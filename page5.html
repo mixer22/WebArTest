@@ -6,162 +6,226 @@
 <title>Станция — Освещение робота</title>
 
 <style>
-    body {
-        margin: 0;
-        font-family: system-ui, sans-serif;
-        background: linear-gradient(#87ceeb, #e0f6ff);
-        transition: background 0.6s;
-        overflow: hidden;
-        height: 100vh;
-    }
+body {
+    margin: 0;
+    font-family: system-ui, sans-serif;
+    background: linear-gradient(#87ceeb, #e0f6ff);
+    transition: background 1s;
+    overflow: hidden;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
-    body.night {
-        background: linear-gradient(#020617, #0f172a);
-    }
+.scene {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
 
-    .scene {
-        position: relative;
-        width: 100%;
-        height: 100%;
-    }
+/* Солнце и луна */
+.sun-moon {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    top: 20%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    cursor: grab;
+    box-shadow: 0 0 30px #ffd93b;
+    background: #ffd93b;
+    transition: background 1s, box-shadow 1s, transform 0.1s;
+}
 
-    .sun {
-        position: absolute;
-        top: 40px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 90px;
-        height: 90px;
-        background: #ffd93b;
-        border-radius: 50%;
-        box-shadow: 0 0 30px #ffd93b;
-        cursor: grab;
-        transition: background 0.4s, box-shadow 0.4s;
-        touch-action: none;
-    }
+/* Ночной режим (луна) */
+body.night {
+    background: linear-gradient(#020617, #0f172a);
+}
 
-    body.night .sun {
-        background: #e5e7eb;
-        box-shadow: 0 0 20px #e5e7eb;
-    }
+/* Луна */
+body.night .sun-moon {
+    background: #e5e7eb;
+    box-shadow: 0 0 20px #e5e7eb;
+}
 
-    .robot {
-        position: absolute;
-        bottom: 80px;
-        left: 50%;
-        transform: translateX(-50%);
-        text-align: center;
-        color: white;
-    }
+/* Робот */
+.robot {
+    position: absolute;
+    bottom: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+}
 
-    .robot-body {
-        width: 140px;
-        height: 160px;
-        background: #374151;
-        border-radius: 16px;
-        position: relative;
-        margin: 0 auto;
-    }
+.robot-body {
+    width: 150px;
+    height: 180px;
+    background: #374151;
+    border-radius: 24px;
+    position: relative;
+    margin: 0 auto;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+}
 
-    .eyes {
-        position: absolute;
-        top: 40px;
-        left: 50%;
-        transform: translateX(-50%);
-        display: flex;
-        gap: 24px;
-    }
+/* Голова */
+.robot-head {
+    width: 100px;
+    height: 80px;
+    background: #1f2937;
+    border-radius: 20px;
+    position: absolute;
+    top: -70px;
+    left: 50%;
+    transform: translateX(-50%);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
 
-    .eye {
-        width: 20px;
-        height: 20px;
-        background: #111827;
-        border-radius: 50%;
-        transition: 0.4s;
-    }
+/* Глаза */
+.eyes {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 24px;
+}
 
-    body.night .eye {
-        background: #fde047;
-        box-shadow: 0 0 20px #fde047;
-    }
+.eye {
+    width: 18px;
+    height: 18px;
+    background: #111827;
+    border-radius: 50%;
+    transition: 0.5s;
+}
 
-    .text {
-        margin-top: 12px;
-        font-size: 15px;
-        opacity: 0.85;
-    }
+body.night .eye {
+    background: #fde047;
+    box-shadow: 0 0 20px #fde047;
+}
 
-    .answer {
-        position: absolute;
-        bottom: 24px;
-        width: 100%;
-        text-align: center;
-        font-size: 20px;
-        font-weight: 700;
-        color: #4ade80;
-        display: none;
-    }
+/* Руки */
+.arm {
+    width: 20px;
+    height: 80px;
+    background: #4b5563;
+    position: absolute;
+    top: 40px;
+    border-radius: 12px;
+}
 
-    body.night .answer {
-        display: block;
-    }
+.arm.left { left: -25px; transform: rotate(-15deg); }
+.arm.right { right: -25px; transform: rotate(15deg); }
+
+.text {
+    margin-top: 12px;
+    font-size: 15px;
+    color: white;
+    opacity: 0.85;
+}
+
+.answer {
+    position: absolute;
+    bottom: 24px;
+    width: 100%;
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: #4ade80;
+    opacity: 0;
+    transition: opacity 0.8s;
+}
+
+.answer.show {
+    opacity: 1;
+}
 </style>
 </head>
-<body>
 
+<body>
 <div class="scene">
-    <div class="sun" id="sun"></div>
+    <div class="sun-moon" id="sunMoon"></div>
 
     <div class="robot">
         <div class="robot-body">
-            <div class="eyes">
-                <div class="eye"></div>
-                <div class="eye"></div>
+            <div class="robot-head">
+                <div class="eyes">
+                    <div class="eye"></div>
+                    <div class="eye"></div>
+                </div>
             </div>
+            <div class="arm left"></div>
+            <div class="arm right"></div>
         </div>
-        <div class="text">
-            Робот включает фары только ночью
-        </div>
+        <div class="text">Робот включает фары только ночью</div>
     </div>
 
-    <div class="answer">
-        Слово-ответ: <span>СВЕТ</span>
-    </div>
+    <div class="answer" id="answer">Слово-ответ: СВЕТ</div>
 </div>
 
 <script>
-    const sun = document.getElementById("sun");
-    let startY = 0;
+const sunMoon = document.getElementById("sunMoon");
+const answer = document.getElementById("answer");
 
-    sun.addEventListener("touchstart", e => {
-        startY = e.touches[0].clientY;
-    });
+let dragging = false;
+let startY = 0;
+let currentAngle = 0;
 
-    sun.addEventListener("touchmove", e => {
-        const currentY = e.touches[0].clientY;
-        if (currentY - startY > 120) {
-            document.body.classList.add("night");
-        }
-    });
-
-    sun.addEventListener("mousedown", e => {
-        startY = e.clientY;
-        document.addEventListener("mousemove", onMove);
-        document.addEventListener("mouseup", stopMove);
-    });
-
-    function onMove(e) {
-        if (e.clientY - startY > 120) {
-            document.body.classList.add("night");
-            stopMove();
-        }
+// Обновляем фон и робота в зависимости от угла
+function updateScene(angle) {
+    // угол 0-180 = день, 180-360 = ночь
+    const normalized = angle % 360;
+    if(normalized > 180) {
+        document.body.classList.add("night");
+        answer.classList.add("show");
+    } else {
+        document.body.classList.remove("night");
+        answer.classList.remove("show");
     }
 
-    function stopMove() {
-        document.removeEventListener("mousemove", onMove);
-        document.removeEventListener("mouseup", stopMove);
-    }
+    // вращение солнца/луны по кругу
+    const radius = window.innerHeight * 0.3;
+    const centerX = window.innerWidth/2;
+    const centerY = window.innerHeight*0.3;
+    const rad = normalized * Math.PI/180;
+    const x = centerX + radius * Math.cos(rad) - sunMoon.offsetWidth/2;
+    const y = centerY + radius * Math.sin(rad) - sunMoon.offsetHeight/2;
+    sunMoon.style.left = x + "px";
+    sunMoon.style.top = y + "px";
+
+    sunMoon.style.transform = `rotate(${normalized}deg)`;
+}
+
+function startDrag(e) {
+    dragging = true;
+    startY = e.touches ? e.touches[0].clientY : e.clientY;
+}
+
+function onDrag(e) {
+    if(!dragging) return;
+    const currentY = e.touches ? e.touches[0].clientY : e.clientY;
+    const delta = currentY - startY;
+    currentAngle += delta * 0.5; // скорость вращения
+    updateScene(currentAngle);
+    startY = currentY;
+}
+
+function stopDrag() {
+    dragging = false;
+}
+
+sunMoon.addEventListener("mousedown", startDrag);
+sunMoon.addEventListener("touchstart", startDrag);
+
+window.addEventListener("mousemove", onDrag);
+window.addEventListener("touchmove", onDrag);
+
+window.addEventListener("mouseup", stopDrag);
+window.addEventListener("touchend", stopDrag);
+
+// Инициализация
+updateScene(currentAngle);
 </script>
-
 </body>
 </html>
