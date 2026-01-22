@@ -50,21 +50,28 @@
       z-index: -1;
     }
 
-    .particle-layer {
-      position: absolute;
+   .particle-layer {
+      position: fixed;          /* вместо absolute */
       inset: 0;
       pointer-events: none;
-      z-index: -1;
+      z-index: -1;              /* теперь -1, а не ниже контейнера */
     }
 
-    .particle {
+   .particle {
       position: absolute;
       background: #60a5fa;
       border-radius: 50%;
       opacity: 0;
       animation: float linear infinite;
-      box-shadow: 0 0 8px #60a5fa;
-    }
+      box-shadow: 0 0 10px #60a5fa, 0 0 20px #3b82f6;   /* ярче свечение */
+  }
+
+  @keyframes float {
+    0%   { transform: translateY(120vh) scale(0.3); opacity: 0; }
+    8%   { opacity: 0.9; }                            /* быстрее появляются */
+    92%  { opacity: 0.9; }
+    100% { transform: translateY(-40vh) scale(0.6); opacity: 0; }
+  }
 
     @keyframes driftParticles {
       0%   { transform: translate(0, 0) scale(1); }
@@ -72,12 +79,6 @@
       100% { transform: translate(-3%, -5%) scale(1.08); }
     }
 
-    @keyframes float {
-      0%   { transform: translateY(110vh) scale(0.2); opacity: 0; }
-      10%  { opacity: 0.6; }
-      90%  { opacity: 0.6; }
-      100% { transform: translateY(-30vh) scale(0.4); opacity: 0; }
-    }
 
     .container {
       width: 100%;
@@ -215,8 +216,6 @@
 </head>
 <body>
 
-<div class="particle-layer"></div>
-
 <div class="container">
   <h1>🤖 Робо-кроссворд</h1>
   <div class="subtitle">Заполните слова и соберите финальное слово из синих клеток</div>
@@ -261,9 +260,9 @@
     <div class="cell"><input data-row="4"></div>
     <div class="cell"><input data-row="4"></div>
 
-    <div class="cell"><span class="number">5</span><input data-row="5"></div>
+    <div class="cell final"><span class="number">5</span><input data-row="5"></div>
     <div class="cell"><input data-row="5"></div>
-    <div class="cell final"><input data-row="5"></div>
+    <div class="cell"><input data-row="5"></div>
     <div class="cell"><input data-row="5"></div>
     <div class="cell"><input data-row="5"></div>
     <div class="cell"><input data-row="5"></div>
@@ -271,6 +270,7 @@
     <div class="cell.empty"><data-row="5"></div>
     <div class="cell.empty"><data-row="5"></div>
   </div>
+  <div class="particle-layer"></div>
   <div class="clues-wrapper">
     <div class="clues">
       <p>1. Устройство, которое измеряет вращение</p>
@@ -344,14 +344,14 @@ function checkRow(row) {
 
 // Генерация частиц
 const particleLayer = document.querySelector('.particle-layer');
-for (let i = 0; i < 18; i++) {
+for (let i = 0; i < 24; i++) {                  // → больше частиц
   const p = document.createElement('div');
   p.className = 'particle';
-  const size = Math.random() * 3 + 1;
+  const size = Math.random() * 4 + 2;           // → 2–6 px вместо 1–4
   p.style.width = p.style.height = size + 'px';
   p.style.left = Math.random() * 100 + '%';
-  p.style.animationDelay = Math.random() * 25 + 's';
-  p.style.animationDuration = (20 + Math.random() * 35) + 's';
+  p.style.animationDelay = Math.random() * 15 + 's';     // быстрее старт
+  p.style.animationDuration = (15 + Math.random() * 25) + 's';
   particleLayer.appendChild(p);
 }
 </script>
