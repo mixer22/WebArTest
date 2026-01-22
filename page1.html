@@ -10,22 +10,73 @@
       --cell-gap: 6px;
       --max-grid-width: 420px;
     }
-
     * {
       box-sizing: border-box;
     }
-
     body {
       margin: 0;
       padding: 16px;
       padding-bottom: calc(16px + env(safe-area-inset-bottom));
-      background: radial-gradient(circle at top, #0f172a, #020617);
+      background: #05070f;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
       color: #e5e7eb;
       min-height: 100dvh;
       display: flex;
       justify-content: center;
       align-items: flex-start;
+      position: relative;
+      overflow: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: 
+        radial-gradient(circle at 15% 25%, #3b82f6 0%, transparent 25%),
+        radial-gradient(circle at 85% 75%, #8b5cf6 0%, transparent 30%);
+      opacity: 0.08;
+      animation: driftParticles 40s ease-in-out infinite;
+      pointer-events: none;
+      z-index: -2;
+    }
+
+    body::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(transparent, rgba(2,6,23,0.92) 65%);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .particle-layer {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .particle {
+      position: absolute;
+      background: #60a5fa;
+      border-radius: 50%;
+      opacity: 0;
+      animation: float linear infinite;
+      box-shadow: 0 0 8px #60a5fa;
+    }
+
+    @keyframes driftParticles {
+      0%   { transform: translate(0, 0) scale(1); }
+      50%  { transform: translate(4%, 6%) scale(1.15); }
+      100% { transform: translate(-3%, -5%) scale(1.08); }
+    }
+
+    @keyframes float {
+      0%   { transform: translateY(110vh) scale(0.2); opacity: 0; }
+      10%  { opacity: 0.6; }
+      90%  { opacity: 0.6; }
+      100% { transform: translateY(-30vh) scale(0.4); opacity: 0; }
     }
 
     .container {
@@ -34,14 +85,14 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      position: relative;
+      z-index: 1;
     }
-
     h1 {
       font-size: clamp(22px, 6vw, 28px);
       margin: 0.4em 0 0.2em;
       text-align: center;
     }
-
     .subtitle {
       text-align: center;
       font-size: clamp(13px, 3.5vw, 15px);
@@ -49,7 +100,6 @@
       margin: 0 0 1.2em;
       max-width: 90%;
     }
-
     /* ─── СЕТКА ──────────────────────────────────────────────── */
     .grid {
       display: grid;
@@ -59,27 +109,22 @@
       justify-content: center;
       margin: 1em 0 2em;
     }
-
-    /* Самое длинное слово → 8 букв → базовая настройка */
     .grid {
       grid-template-columns: repeat(9, minmax(0, 1fr));
       max-width: calc(9 * var(--cell-size) + 7 * var(--cell-gap));
     }
-
     @media (max-width: 360px) {
       :root {
         --cell-size: 42px;
         --cell-gap: 5px;
       }
     }
-
     @media (max-width: 320px) {
       :root {
         --cell-size: 38px;
         --cell-gap: 4px;
       }
     }
-
     .cell {
       position: relative;
       width: var(--cell-size);
@@ -91,28 +136,22 @@
       justify-content: center;
       transition: all 0.18s ease;
     }
-
     .cell.final {
       background: #2563eb;
     }
-
     .cell.correct {
       background: #15803d;
     }
-
     .cell.correct.final {
       background: #3b82f6;
     }
-
     .cell.error-flash {
       animation: errorFlash 0.4s ease-in-out 2;
     }
-
     @keyframes errorFlash {
       0%, 100% { background: #1e293b; }
-      50%      { background: #7f1d1d; }
+      50% { background: #7f1d1d; }
     }
-
     .cell input {
       width: 100%;
       height: 100%;
@@ -126,17 +165,14 @@
       text-transform: uppercase;
       caret-color: #60a5fa;
     }
-
     .cell.correct input,
     .cell.final input {
       color: #f1f5f9;
     }
-
     .cell.empty {
       background: transparent;
       pointer-events: none;
     }
-
     .number {
       position: absolute;
       top: 2px;
@@ -146,23 +182,19 @@
       pointer-events: none;
       font-weight: 500;
     }
-
     /* ─── ПОДСКАЗКИ ───────────────────────────────────────────── */
     .clues-wrapper {
       width: 100%;
       max-width: var(--max-grid-width);
       padding: 0 8px;
     }
-
     .clues {
       font-size: clamp(13px, 3.6vw, 15px);
       line-height: 1.6;
     }
-
     .clues p {
       margin: 0.6em 0;
     }
-
     /* ─── ФУТЕР ───────────────────────────────────────────────── */
     .footer {
       margin-top: 2em;
@@ -174,15 +206,12 @@
       width: 100%;
       max-width: var(--max-grid-width);
     }
-
     /* фокус */
     input:focus {
       outline: 2.5px solid #60a5fa;
       outline-offset: -2.5px;
       border-radius: 8px;
     }
-
-    /* для iOS — лучшее поведение клавиатуры */
     input {
       -webkit-tap-highlight-color: transparent;
     }
@@ -190,10 +219,11 @@
 </head>
 <body>
 
+<div class="particle-layer"></div>
+
 <div class="container">
   <h1>🤖 Робо-кроссворд</h1>
   <div class="subtitle">Заполните слова и соберите финальное слово из синих клеток</div>
-
   <div class="grid">
     <!-- 1. ГИРОСКОП -->
     <div class="cell"><span class="number">1</span><input data-row="1"></div>
@@ -204,8 +234,7 @@
     <div class="cell"><input data-row="1"></div>
     <div class="cell"><input data-row="1"></div>
     <div class="cell"><input data-row="1"></div>
-    <div class="cell.empty"><data-row="1"></div>
-
+    <div class="cell empty"><data-row="1"></div>
     <!-- 2. ДАТЧИК -->
     <div class="cell"><span class="number">2</span><input data-row="2"></div>
     <div class="cell final"><input data-row="2"></div>
@@ -216,7 +245,7 @@
     <div class="cell.empty"><data-row="2"></div>
     <div class="cell.empty"><data-row="2"></div>
     <div class="cell.empty"><data-row="2"></div>
-    
+   
     <!-- 3. МОТОР -->
     <div class="cell"><span class="number">3</span><input data-row="3"></div>
     <div class="cell final"><input data-row="3"></div>
@@ -227,7 +256,6 @@
     <div class="cell.empty"><data-row="3"></div>
     <div class="cell.empty"><data-row="3"></div>
     <div class="cell.empty"><data-row="3"></div>
-
     <!-- 4. ПРОГРАММА -->
     <div class="cell"><span class="number">4</span><input data-row="4"></div>
     <div class="cell"><input data-row="4"></div>
@@ -238,7 +266,6 @@
     <div class="cell"><input data-row="4"></div>
     <div class="cell"><input data-row="4"></div>
     <div class="cell"><input data-row="4"></div>
-
     <!-- 5. БАТАРЕЯ -->
     <div class="cell"><span class="number">5</span><input data-row="5"></div>
     <div class="cell final"><input data-row="5"></div>
@@ -250,7 +277,6 @@
     <div class="cell.empty"><data-row="5"></div>
     <div class="cell.empty"><data-row="5"></div>
   </div>
-
   <div class="clues-wrapper">
     <div class="clues">
       <p>1. Устройство, которое измеряет вращение</p>
@@ -260,7 +286,6 @@
       <p>5. Источник энергии для гаджетов</p>
     </div>
   </div>
-
   <div class="footer">
     🔐 Финальное слово состоит из <b>синих клеток</b><br>
     Отправьте его в Telegram-бот
@@ -275,27 +300,20 @@ const answers = {
   "4": "ПРОГРАММА",
   "5": "БАТАРЕЯ"
 };
-
 const inputs = [...document.querySelectorAll("input")];
-
 inputs.forEach(input => {
   input.maxLength = 1;
-
   input.addEventListener("input", e => {
     const val = e.target.value.toUpperCase();
     e.target.value = val;
-
     const row = input.dataset.row;
     const rowInputs = getRowInputs(row);
     const idx = rowInputs.indexOf(input);
-
     if (val && idx < rowInputs.length - 1) {
       rowInputs[idx + 1].focus();
     }
-
     checkRow(row);
   });
-
   input.addEventListener("keydown", e => {
     if (e.key === "Backspace" && !input.value) {
       const row = input.dataset.row;
@@ -308,27 +326,19 @@ inputs.forEach(input => {
     }
   });
 });
-
 function getRowInputs(row) {
   return inputs.filter(i => i.dataset.row === row && !i.parentElement.classList.contains("empty"));
 }
-
 function checkRow(row) {
   const cells = [...document.querySelectorAll(`.cell:has(input[data-row="${row}"])`)]
     .filter(c => !c.classList.contains("empty"));
-
   const inputsInRow = cells.map(c => c.querySelector("input"));
   const word = inputsInRow.map(i => i.value.toUpperCase()).join("");
-
-  // ещё не всё заполнено
   if (word.length < answers[row].length) return;
-
   const isCorrect = word === answers[row];
-
   cells.forEach(cell => {
     const input = cell.querySelector("input");
     input.disabled = isCorrect;
-
     if (isCorrect) {
       cell.classList.add("correct");
     } else {
@@ -336,6 +346,19 @@ function checkRow(row) {
       setTimeout(() => cell.classList.remove("error-flash"), 900);
     }
   });
+}
+
+// Генерация частиц
+const particleLayer = document.querySelector('.particle-layer');
+for (let i = 0; i < 18; i++) {
+  const p = document.createElement('div');
+  p.className = 'particle';
+  const size = Math.random() * 3 + 1;
+  p.style.width = p.style.height = size + 'px';
+  p.style.left = Math.random() * 100 + '%';
+  p.style.animationDelay = Math.random() * 25 + 's';
+  p.style.animationDuration = (20 + Math.random() * 35) + 's';
+  particleLayer.appendChild(p);
 }
 </script>
 </body>
