@@ -100,7 +100,6 @@
       margin: 0 0 1.2em;
       max-width: 90%;
     }
-    /* ─── СЕТКА ──────────────────────────────────────────────── */
     .grid {
       display: grid;
       gap: var(--cell-gap);
@@ -182,7 +181,6 @@
       pointer-events: none;
       font-weight: 500;
     }
-    /* ─── ПОДСКАЗКИ ───────────────────────────────────────────── */
     .clues-wrapper {
       width: 100%;
       max-width: var(--max-grid-width);
@@ -195,7 +193,6 @@
     .clues p {
       margin: 0.6em 0;
     }
-    /* ─── ФУТЕР ───────────────────────────────────────────────── */
     .footer {
       margin-top: 2em;
       padding: 12px 16px;
@@ -206,7 +203,6 @@
       width: 100%;
       max-width: var(--max-grid-width);
     }
-    /* фокус */
     input:focus {
       outline: 2.5px solid #60a5fa;
       outline-offset: -2.5px;
@@ -225,7 +221,6 @@
   <h1>🤖 Робо-кроссворд</h1>
   <div class="subtitle">Заполните слова и соберите финальное слово из синих клеток</div>
   <div class="grid">
-    <!-- 1. ГИРОСКОП -->
     <div class="cell"><span class="number">1</span><input data-row="1"></div>
     <div class="cell"><input data-row="1"></div>
     <div class="cell final"><input data-row="1"></div>
@@ -235,10 +230,10 @@
     <div class="cell"><input data-row="1"></div>
     <div class="cell"><input data-row="1"></div>
     <div class="cell empty"><data-row="1"></div>
-    <!-- 2. ДАТЧИК -->
+    
     <div class="cell"><span class="number">2</span><input data-row="2"></div>
-    <div class="cell final"><input data-row="2"></div>
     <div class="cell"><input data-row="2"></div>
+    <div class="cell final"><input data-row="2"></div>
     <div class="cell"><input data-row="2"></div>
     <div class="cell"><input data-row="2"></div>
     <div class="cell"><input data-row="2"></div>
@@ -246,7 +241,6 @@
     <div class="cell.empty"><data-row="2"></div>
     <div class="cell.empty"><data-row="2"></div>
    
-    <!-- 3. МОТОР -->
     <div class="cell"><span class="number">3</span><input data-row="3"></div>
     <div class="cell final"><input data-row="3"></div>
     <div class="cell"><input data-row="3"></div>
@@ -256,7 +250,7 @@
     <div class="cell.empty"><data-row="3"></div>
     <div class="cell.empty"><data-row="3"></div>
     <div class="cell.empty"><data-row="3"></div>
-    <!-- 4. ПРОГРАММА -->
+
     <div class="cell"><span class="number">4</span><input data-row="4"></div>
     <div class="cell"><input data-row="4"></div>
     <div class="cell final"><input data-row="4"></div>
@@ -266,10 +260,10 @@
     <div class="cell"><input data-row="4"></div>
     <div class="cell"><input data-row="4"></div>
     <div class="cell"><input data-row="4"></div>
-    <!-- 5. БАТАРЕЯ -->
+
     <div class="cell"><span class="number">5</span><input data-row="5"></div>
-    <div class="cell final"><input data-row="5"></div>
     <div class="cell"><input data-row="5"></div>
+    <div class="cell final"><input data-row="5"></div>
     <div class="cell"><input data-row="5"></div>
     <div class="cell"><input data-row="5"></div>
     <div class="cell"><input data-row="5"></div>
