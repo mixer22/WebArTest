@@ -1,235 +1,269 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<title>Робо-кроссворд</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <title>Робо-кроссворд</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <style>
+    :root {
+      --cell-size: 48px;
+      --cell-gap: 6px;
+      --max-grid-width: 420px;
+    }
 
-<style>
-/* Базовые стили */
-body {
-  margin: 0;
-  padding: 16px;
-  padding-bottom: calc(16px + env(safe-area-inset-bottom));
-  background: radial-gradient(circle at top, #0f172a, #020617);
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  color: #e5e7eb;
-  display: flex;
-  justify-content: center;
-}
+    * {
+      box-sizing: border-box;
+    }
 
-.container {
-  width: 100%;
-  max-width: 420px;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
+    body {
+      margin: 0;
+      padding: 16px;
+      padding-bottom: calc(16px + env(safe-area-inset-bottom));
+      background: radial-gradient(circle at top, #0f172a, #020617);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      color: #e5e7eb;
+      min-height: 100dvh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
 
-h1 {
-  text-align: center;
-  font-size: clamp(20px, 5vw, 26px);
-  margin-bottom: 4px;
-}
+    .container {
+      width: 100%;
+      max-width: 480px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
 
-.subtitle {
-  text-align: center;
-  font-size: clamp(12px, 3vw, 16px);
-  color: #94a3b8;
-  margin-bottom: 16px;
-}
+    h1 {
+      font-size: clamp(22px, 6vw, 28px);
+      margin: 0.4em 0 0.2em;
+      text-align: center;
+    }
 
-/* Сетка кроссворда */
-.grid {
-  display: grid;
-  gap: 6px;
-  margin: 16px 0 32px;
-}
+    .subtitle {
+      text-align: center;
+      font-size: clamp(13px, 3.5vw, 15px);
+      color: #94a3b8;
+      margin: 0 0 1.2em;
+      max-width: 90%;
+    }
 
-/* Адаптивное количество колонок под максимальное слово */
-@media (min-width: 320px) {
-  .grid {
-    grid-template-columns: repeat(8, 1fr);
-  }
-}
-@media (min-width: 400px) {
-  .grid {
-    grid-template-columns: repeat(8, 1fr);
-  }
-}
+    /* ─── СЕТКА ──────────────────────────────────────────────── */
+    .grid {
+      display: grid;
+      gap: var(--cell-gap);
+      width: 100%;
+      max-width: var(--max-grid-width);
+      justify-content: center;
+      margin: 1em 0 2em;
+    }
 
-/* Клетки */
-.cell {
-  position: relative;
-  background: #1e293b;
-  border-radius: 12px;
-  aspect-ratio: 1 / 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.2s;
-}
+    /* Самое длинное слово → 8 букв → базовая настройка */
+    .grid {
+      grid-template-columns: repeat(8, minmax(0, 1fr));
+      max-width: calc(8 * var(--cell-size) + 7 * var(--cell-gap));
+    }
 
-.cell.final {
-  background: #2563eb;
-}
+    @media (max-width: 360px) {
+      :root {
+        --cell-size: 42px;
+        --cell-gap: 5px;
+      }
+    }
 
-.cell.correct {
-  background: #15803d !important;
-}
+    @media (max-width: 320px) {
+      :root {
+        --cell-size: 38px;
+        --cell-gap: 4px;
+      }
+    }
 
-.cell.correct.final {
-  background: #2563eb !important;
-}
+    .cell {
+      position: relative;
+      width: var(--cell-size);
+      height: var(--cell-size);
+      background: #1e293b;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.18s ease;
+    }
 
-.cell input {
-  width: 100%;
-  height: 100%;
-  background: transparent;
-  border: none;
-  outline: none;
-  text-align: center;
-  font-size: clamp(20px, 6vw, 26px);
-  text-transform: uppercase;
-  color: #e5e7eb;
-  font-weight: 700;
-}
+    .cell.final {
+      background: #2563eb;
+    }
 
-/* Стили для правильных букв */
-.cell.correct input {
-  color: #dcfce7;
-}
+    .cell.correct {
+      background: #15803d;
+    }
 
-.cell.empty {
-  background: transparent;
-}
+    .cell.correct.final {
+      background: #3b82f6;
+    }
 
-/* Номер клетки */
-.number {
-  position: absolute;
-  top: 2px;
-  left: 4px;
-  font-size: clamp(8px, 2.5vw, 12px);
-  color: #94a3b8;
-  pointer-events: none;
-}
+    .cell.error-flash {
+      animation: errorFlash 0.4s ease-in-out 2;
+    }
 
-/* Подсказки */
-.clues-wrapper {
-  margin-top: 16px;
-}
+    @keyframes errorFlash {
+      0%, 100% { background: #1e293b; }
+      50%      { background: #7f1d1d; }
+    }
 
-.clues {
-  font-size: clamp(12px, 3vw, 14px);
-  line-height: 1.5;
-}
+    .cell input {
+      width: 100%;
+      height: 100%;
+      background: transparent;
+      border: none;
+      outline: none;
+      text-align: center;
+      font-size: clamp(18px, 5.5vw, 24px);
+      font-weight: 700;
+      color: #e5e7eb;
+      text-transform: uppercase;
+      caret-color: #60a5fa;
+    }
 
-/* Подвал */
-.footer {
-  margin-top: 16px;
-  padding: 12px;
-  background: #020617;
-  border-radius: 12px;
-  text-align: center;
-  font-size: clamp(12px, 3vw, 14px);
-}
+    .cell.correct input,
+    .cell.final input {
+      color: #f1f5f9;
+    }
 
-/* Подсветка фокуса */
-input:focus {
-  outline: 2px solid #2563eb;
-  outline-offset: -2px;
-}
-</style>
+    .cell.empty {
+      background: transparent;
+      pointer-events: none;
+    }
+
+    .number {
+      position: absolute;
+      top: 2px;
+      left: 5px;
+      font-size: clamp(9px, 2.4vw, 11px);
+      color: #94a3b8;
+      pointer-events: none;
+      font-weight: 500;
+    }
+
+    /* ─── ПОДСКАЗКИ ───────────────────────────────────────────── */
+    .clues-wrapper {
+      width: 100%;
+      max-width: var(--max-grid-width);
+      padding: 0 8px;
+    }
+
+    .clues {
+      font-size: clamp(13px, 3.6vw, 15px);
+      line-height: 1.6;
+    }
+
+    .clues p {
+      margin: 0.6em 0;
+    }
+
+    /* ─── ФУТЕР ───────────────────────────────────────────────── */
+    .footer {
+      margin-top: 2em;
+      padding: 12px 16px;
+      background: rgba(2, 6, 23, 0.7);
+      border-radius: 12px;
+      text-align: center;
+      font-size: clamp(12px, 3.2vw, 14px);
+      width: 100%;
+      max-width: var(--max-grid-width);
+    }
+
+    /* фокус */
+    input:focus {
+      outline: 2.5px solid #60a5fa;
+      outline-offset: -2.5px;
+      border-radius: 8px;
+    }
+
+    /* для iOS — лучшее поведение клавиатуры */
+    input {
+      -webkit-tap-highlight-color: transparent;
+    }
+  </style>
 </head>
-
-
 <body>
+
 <div class="container">
+  <h1>🤖 Робо-кроссворд</h1>
+  <div class="subtitle">Заполните слова и соберите финальное слово из синих клеток</div>
 
-<h1>🤖 Робо-кроссворд</h1>
-<div class="subtitle">Заполните слова и соберите финальный ответ из выделенных букв</div>
+  <div class="grid">
+    <!-- 1. ГИРОСКОП -->
+    <div class="cell"><span class="number">1</span><input data-row="1"></div>
+    <div class="cell"><input data-row="1"></div>
+    <div class="cell final"><input data-row="1"></div>
+    <div class="cell"><input data-row="1"></div>
+    <div class="cell"><input data-row="1"></div>
+    <div class="cell"><input data-row="1"></div>
+    <div class="cell"><input data-row="1"></div>
+    <div class="cell"><input data-row="1"></div>
 
-<div class="grid">
-  <!-- 1. ГИРОСКОП -->
-  <div class="cell"><span class="number">1</span><input data-row="1"></div>
-  <div class="cell"><input data-row="1"></div>
-  <div class="cell final"><input data-row="1"></div>
-  <div class="cell"><input data-row="1"></div>
-  <div class="cell"><input data-row="1"></div>
-  <div class="cell"><input data-row="1"></div>
-  <div class="cell"><input data-row="1"></div>
-  <div class="cell"><input data-row="1"></div>
-  <div class="cell empty"></div>
+    <!-- 2. ДАТЧИК -->
+    <div class="cell"><span class="number">2</span><input data-row="2"></div>
+    <div class="cell final"><input data-row="2"></div>
+    <div class="cell"><input data-row="2"></div>
+    <div class="cell"><input data-row="2"></div>
+    <div class="cell"><input data-row="2"></div>
+    <div class="cell"><input data-row="2"></div>
 
-  <!-- 2. ДАТЧИК -->
-  <div class="cell"><span class="number">2</span><input data-row="2"></div>
-  <div class="cell final"><input data-row="2"></div>
-  <div class="cell"><input data-row="2"></div>
-  <div class="cell"><input data-row="2"></div>
-  <div class="cell"><input data-row="2"></div>
-  <div class="cell"><input data-row="2"></div>
-  <div class="cell empty"></div>
-  <div class="cell empty"></div>
-  <div class="cell empty"></div>
-  
-  <!-- 3. МОТОР -->
-  <div class="cell"><span class="number">3</span><input data-row="3"></div>
-  <div class="cell final"><input data-row="3"></div>
-  <div class="cell"><input data-row="3"></div>
-  <div class="cell"><input data-row="3"></div>
-  <div class="cell"><input data-row="3"></div>
-  <div class="cell empty"></div>
-  <div class="cell empty"></div>
-  <div class="cell empty"></div>
-  <div class="cell empty"></div>
+    <!-- 3. МОТОР -->
+    <div class="cell"><span class="number">3</span><input data-row="3"></div>
+    <div class="cell final"><input data-row="3"></div>
+    <div class="cell"><input data-row="3"></div>
+    <div class="cell"><input data-row="3"></div>
+    <div class="cell"><input data-row="3"></div>
 
-  <!-- 4. ПРОГРАММА -->
-  <div class="cell"><span class="number">4</span><input data-row="4"></div>
-  <div class="cell"><input data-row="4"></div>
-  <div class="cell final"><input data-row="4"></div>
-  <div class="cell"><input data-row="4"></div>
-  <div class="cell"><input data-row="4"></div>
-  <div class="cell"><input data-row="4"></div>
-  <div class="cell"><input data-row="4"></div>
-  <div class="cell"><input data-row="4"></div>
-  <div class="cell"><input data-row="4"></div>
+    <!-- 4. ПРОГРАММА -->
+    <div class="cell"><span class="number">4</span><input data-row="4"></div>
+    <div class="cell"><input data-row="4"></div>
+    <div class="cell final"><input data-row="4"></div>
+    <div class="cell"><input data-row="4"></div>
+    <div class="cell"><input data-row="4"></div>
+    <div class="cell"><input data-row="4"></div>
+    <div class="cell"><input data-row="4"></div>
+    <div class="cell"><input data-row="4"></div>
+    <div class="cell"><input data-row="4"></div>
 
-  <!-- 5. БАТАРЕЯ -->
-  <div class="cell"><span class="number">5</span><input data-row="5"></div>
-  <div class="cell final"><input data-row="5"></div>
-  <div class="cell"><input data-row="5"></div>
-  <div class="cell"><input data-row="5"></div>
-  <div class="cell"><input data-row="5"></div>
-  <div class="cell"><input data-row="5"></div>
-  <div class="cell"><input data-row="5"></div>
-  <div class="cell empty"></div>
-  <div class="cell empty"></div>
-</div>
-
-<div class="clues-wrapper">
-  <div class="clues">
-    <p>1. Устройство, которое измеряет вращение</p>
-    <p>2. Устройство, которое измеряет что-либо</p>
-    <p>3. Часть робота, отвечающая за движение</p>
-    <p>4. Набор команд для робота или компьютера</p>
-    <p>5. Источник энергии для гаджетов</p>
+    <!-- 5. БАТАРЕЯ -->
+    <div class="cell"><span class="number">5</span><input data-row="5"></div>
+    <div class="cell final"><input data-row="5"></div>
+    <div class="cell"><input data-row="5"></div>
+    <div class="cell"><input data-row="5"></div>
+    <div class="cell"><input data-row="5"></div>
+    <div class="cell"><input data-row="5"></div>
+    <div class="cell"><input data-row="5"></div>
   </div>
-</div>
 
-<div class="footer">
-🔐 Финальное слово состоит из <b>синих клеток</b><br>
-Отправьте его в Telegram-бот
-</div>
+  <div class="clues-wrapper">
+    <div class="clues">
+      <p>1. Устройство, которое измеряет вращение</p>
+      <p>2. Устройство, которое измеряет что-либо</p>
+      <p>3. Часть робота, отвечающая за движение</p>
+      <p>4. Набор команд для робота или компьютера</p>
+      <p>5. Источник энергии для гаджетов</p>
+    </div>
+  </div>
 
+  <div class="footer">
+    🔐 Финальное слово состоит из <b>синих клеток</b><br>
+    Отправьте его в Telegram-бот
+  </div>
 </div>
 
 <script>
 const answers = {
-  1: "ГИРОСКОП",
-  2: "ДАТЧИК",
-  3: "МОТОР",
-  4: "ПРОГРАММА",
-  5: "БАТАРЕЯ"
+  "1": "ГИРОСКОП",
+  "2": "ДАТЧИК",
+  "3": "МОТОР",
+  "4": "ПРОГРАММА",
+  "5": "БАТАРЕЯ"
 };
 
 const inputs = [...document.querySelectorAll("input")];
@@ -237,13 +271,16 @@ const inputs = [...document.querySelectorAll("input")];
 inputs.forEach(input => {
   input.maxLength = 1;
 
-  input.addEventListener("input", () => {
-    const row = input.dataset.row;
-    const rowInputs = inputs.filter(i => i.dataset.row === row);
-    const index = rowInputs.indexOf(input);
+  input.addEventListener("input", e => {
+    const val = e.target.value.toUpperCase();
+    e.target.value = val;
 
-    if (input.value && index < rowInputs.length - 1) {
-      rowInputs[index + 1].focus();
+    const row = input.dataset.row;
+    const rowInputs = getRowInputs(row);
+    const idx = rowInputs.indexOf(input);
+
+    if (val && idx < rowInputs.length - 1) {
+      rowInputs[idx + 1].focus();
     }
 
     checkRow(row);
@@ -252,32 +289,44 @@ inputs.forEach(input => {
   input.addEventListener("keydown", e => {
     if (e.key === "Backspace" && !input.value) {
       const row = input.dataset.row;
-      const rowInputs = inputs.filter(i => i.dataset.row === row);
-      const index = rowInputs.indexOf(input);
-      if (index > 0) rowInputs[index - 1].focus();
+      const rowInputs = getRowInputs(row);
+      const idx = rowInputs.indexOf(input);
+      if (idx > 0) {
+        e.preventDefault();
+        rowInputs[idx - 1].focus();
+      }
     }
   });
 });
 
+function getRowInputs(row) {
+  return inputs.filter(i => i.dataset.row === row && !i.parentElement.classList.contains("empty"));
+}
+
 function checkRow(row) {
-  const rowInputs = inputs.filter(i => i.dataset.row === row);
-  const word = rowInputs.map(i => i.value.toUpperCase()).join("");
+  const cells = [...document.querySelectorAll(`.cell:has(input[data-row="${row}"])`)]
+    .filter(c => !c.classList.contains("empty"));
 
-  // Если слово не полностью заполнено — ничего не делаем
-  if (rowInputs.some(i => i.value === "")) return;
+  const inputsInRow = cells.map(c => c.querySelector("input"));
+  const word = inputsInRow.map(i => i.value.toUpperCase()).join("");
 
-  // Проверяем слово
-  if (word === answers[row]) {
-    rowInputs.forEach(i => {
-      i.disabled = true; // запрет редактирования
-      // Если клетка не финальная (не синяя) — зеленая
-      if (!i.parentElement.classList.contains("final")) {
-        i.parentElement.classList.add("correct"); // зеленая
-      }
-    });
-  }
+  // ещё не всё заполнено
+  if (word.length < answers[row].length) return;
+
+  const isCorrect = word === answers[row];
+
+  cells.forEach(cell => {
+    const input = cell.querySelector("input");
+    input.disabled = isCorrect;
+
+    if (isCorrect) {
+      cell.classList.add("correct");
+    } else {
+      cell.classList.add("error-flash");
+      setTimeout(() => cell.classList.remove("error-flash"), 900);
+    }
+  });
 }
 </script>
-
 </body>
 </html>
