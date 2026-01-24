@@ -83,7 +83,7 @@
     height: 110px;
     border-radius: 50%;
     cursor: grab;
-    transition: all 0.4s ease, opacity 1s ease;
+    transition: all 0.4s ease;
     z-index: 5;
   }
   .sun {
@@ -93,9 +93,6 @@
   .moon {
     background: radial-gradient(circle at 30% 30%, #f0f4ff, #e5e7eb 40%, #c0d0ff);
     box-shadow: 0 0 50px 15px rgba(229,231,235,0.6);
-  }
-  body.night .sun-moon {
-    opacity: 0.95; /* луна чуть тусклее, но всё равно видна */
   }
   /* Робот */
   .robot {
@@ -263,68 +260,61 @@ for (let i = 0; i < 70; i++) {
   starsContainer.appendChild(s);
 }
 
-// Перетаскивание
+// Перетаскивание — как в твоём первом коде
 const sunMoon = document.getElementById('sunMoon');
 const answer = document.getElementById('answer');
-let isDragging = false;
+let dragging = false;
 let startY = 0;
-let currentAngle = 0; // 0° — солнце слева-сверху (рассвет, видно сразу)
+let currentAngle = 90; // старт сверху (день)
 
-function updateSunMoon() {
-  const norm = ((currentAngle % 360) + 360) % 360;
-  const isNight = norm > 90 && norm < 270;
+function updateScene(angle) {
+  const normalized = ((angle % 360) + 360) % 360;
+  const isNight = normalized > 180;
 
   document.body.classList.toggle('night', isNight);
   answer.classList.toggle('show', isNight);
 
-  // Центр дуги ниже → солнце всегда видно в начале
-  const radiusX = window.innerWidth  * 0.42;
-  const radiusY = window.innerHeight * 0.28; // уменьшили вертикальный радиус
-  const centerX = window.innerWidth  / 2;
-  const centerY = window.innerHeight * 0.35; // опустили центр — солнце стартует ниже
+  // Позиция как в твоём первом варианте — круговая орбита
+  const radius = Math.min(window.innerWidth, window.innerHeight) * 0.38;
+  const centerX = window.innerWidth / 2;
+  const centerY = window.innerHeight * 0.32; // центр чуть ниже — солнце видно сразу
 
-  const rad = (currentAngle - 90) * Math.PI / 180;
-  let x = centerX + radiusX * Math.cos(rad);
-  let y = centerY + radiusY * Math.sin(rad);
+  const rad = normalized * Math.PI / 180;
+  const x = centerX + radius * Math.cos(rad) - sunMoon.offsetWidth / 2;
+  const y = centerY + radius * Math.sin(rad) - sunMoon.offsetHeight / 2;
 
-  // Если солнце уходит слишком низко — плавно прячем
-  const opacity = (y < window.innerHeight * 0.85) ? 1 : Math.max(0, 1 - (y - window.innerHeight * 0.85) / (window.innerHeight * 0.15));
-  sunMoon.style.opacity = opacity;
-
-  sunMoon.style.left = `${x - sunMoon.offsetWidth / 2}px`;
-  sunMoon.style.top  = `${y - sunMoon.offsetHeight / 2}px`;
-
-  sunMoon.style.transform = `rotate(${currentAngle}deg)`;
+  sunMoon.style.left = x + "px";
+  sunMoon.style.top  = y + "px";
 }
 
 function startDrag(e) {
-  isDragging = true;
+  dragging = true;
   startY = e.touches ? e.touches[0].clientY : e.clientY;
   e.preventDefault();
 }
 
-function moveDrag(e) {
-  if (!isDragging) return;
-  const y = e.touches ? e.touches[0].clientY : e.clientY;
-  const delta = y - startY;
-  currentAngle += delta * 0.4; // чуть меньше чувствительности
-  updateSunMoon();
-  startY = y;
+function onDrag(e) {
+  if (!dragging) return;
+  const currentY = e.touches ? e.touches[0].clientY : e.clientY;
+  const delta = currentY - startY;
+  currentAngle += delta * 0.6; // скорость как в оригинале, чуть мягче
+  updateScene(currentAngle);
+  startY = currentY;
 }
 
-function endDrag() {
-  isDragging = false;
+function stopDrag() {
+  dragging = false;
 }
 
-sunMoon.addEventListener('mousedown', startDrag);
-sunMoon.addEventListener('touchstart', startDrag);
-window.addEventListener('mousemove', moveDrag);
-window.addEventListener('touchmove', moveDrag, { passive: false });
-window.addEventListener('mouseup', endDrag);
-window.addEventListener('touchend', endDrag);
+sunMoon.addEventListener("mousedown", startDrag);
+sunMoon.addEventListener("touchstart", startDrag);
+window.addEventListener("mousemove", onDrag);
+window.addEventListener("touchmove", onDrag, { passive: false });
+window.addEventListener("mouseup", stopDrag);
+window.addEventListener("touchend", stopDrag);
 
-// Старт
-updateSunMoon();
+// Инициализация
+updateScene(currentAngle);
 </script>
 </body>
 </html>
