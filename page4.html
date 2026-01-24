@@ -198,7 +198,7 @@
         </div>
     </div>
 
-    <div class="question" data-correct="3">
+    <div class="question" data-correct="2">
         <div class="question-title">3. Какая лампочка тратит меньше всего электроэнергии при той же яркости?</div>
         <div class="options">
             <div class="option">Лампа накаливания</div>
@@ -255,8 +255,6 @@
                 }
             } else {
                 allCorrect = false;
-                // Показываем правильный, если ничего не выбрано
-                options[Number(correct) - 1].classList.add('correct');
             }
         });
 
@@ -266,7 +264,7 @@
             resultEl.innerHTML = '✅ Всё верно!<br>Слово-пароль: <b>ВОЗОБНОВЛЯЕМАЯ</b>';
             resultEl.className = 'result success';
         } else {
-            resultEl.textContent = '❌ Есть ошибки — смотри подсветку';
+            resultEl.textContent = '❌ Есть ошибки';
             resultEl.className = 'result error';
         }
     }
