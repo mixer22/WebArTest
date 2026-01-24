@@ -75,14 +75,14 @@
       50%      { opacity: 1;   transform: scale(1.3); }
     }
 
-    /* Солнце / Луна */
+    /* Солнце / Луна — старт высоко */
     #celestial {
       position: absolute;
       width: 120px;
       height: 120px;
       border-radius: 50%;
       left: 50%;
-      top: 12%;                   /* ← высоко в небе */
+      top: 8%;                    /* ← высоко над роботом */
       transform: translateX(-50%);
       cursor: grab;
       user-select: none;
@@ -101,7 +101,7 @@
       box-shadow: 0 0 60px 20px #e9ecefaa;
     }
 
-    /* Робот — яркий, цветной */
+    /* Робот — тёмные неоновые цвета */
     .robot {
       position: absolute;
       bottom: 6%;
@@ -115,24 +115,24 @@
       width: 200px;
       height: 280px;
       margin: 0 auto;
-      background: linear-gradient(135deg, #00d4ff, #0095ff); /* яркий голубой */
+      background: linear-gradient(135deg, #1e293b, #0f172a); /* тёмно-синий ночной */
       border-radius: 50px 50px 30px 30px;
       position: relative;
-      box-shadow: 0 25px 50px rgba(0,0,0,0.4),
-                  inset 0 12px 24px rgba(255,255,255,0.25);
+      box-shadow: 0 25px 50px rgba(0,0,0,0.6),
+                  inset 0 12px 24px rgba(59,130,246,0.15); /* неоново-голубой блик */
     }
 
     .head {
       width: 160px;
       height: 130px;
-      background: linear-gradient(135deg, #ffdd57, #ffaa00); /* яркий жёлто-оранжевый */
+      background: linear-gradient(135deg, #1f2937, #111827); /* тёмно-серый */
       border-radius: 50%;
       position: absolute;
       top: -90px;
       left: 50%;
       transform: translateX(-50%);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.35),
-                  inset 0 8px 16px rgba(255,255,255,0.3);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5),
+                  inset 0 8px 16px rgba(139,92,246,0.12); /* неоново-фиолетовый блик */
     }
 
     .visor {
@@ -152,19 +152,20 @@
       position: absolute;
       width: 100%;
       height: 100%;
-      background: radial-gradient(circle at 50% 10%, #fff176 0%, #ffeb3b 30%, transparent 60%);
+      background: radial-gradient(circle at 50% 10%, #a5f3fc 0%, #67e8f9 30%, #22d3ee 50%, transparent 70%);
       opacity: 0;
       transition: opacity 1s ease;
+      box-shadow: 0 0 40px #22d3ee inset;
     }
 
     body.night .light {
       opacity: 1;
-      animation: neonGlow 1.8s ease-in-out infinite alternate;
+      animation: neonGlow 1.6s ease-in-out infinite alternate;
     }
 
     @keyframes neonGlow {
-      0%   { opacity: 0.9;  filter: brightness(1.1); }
-      100% { opacity: 1;    filter: brightness(1.6); }
+      0%   { opacity: 0.95; filter: brightness(1.2) drop-shadow(0 0 20px #22d3ee); }
+      100% { opacity: 1;    filter: brightness(2.0) drop-shadow(0 0 40px #67e8f9); }
     }
 
     .beam {
@@ -174,7 +175,7 @@
       transform: translateX(-50%);
       width: 240px;
       height: 550px;
-      background: conic-gradient(from 0deg at 50% 0%, transparent 20deg, #fff176 45deg, #ffeb3b 75deg, transparent 100deg);
+      background: conic-gradient(from 0deg at 50% 0%, transparent 20deg, #a5f3fc 45deg, #67e8f9 75deg, transparent 100deg);
       opacity: 0;
       pointer-events: none;
       transition: opacity 1.8s;
@@ -207,13 +208,13 @@
 
     .reveal {
       position: absolute;
-      top: 12%;                    /* ← над головой робота */
+      top: 18%;                    /* ← над головой робота */
       left: 50%;
       transform: translateX(-50%);
       font-size: 64px;
       font-weight: 900;
-      color: #fff176;
-      text-shadow: 0 0 40px #ffeb3b, 0 0 80px #fbc02d, 0 0 120px #f59e0b;
+      color: #a5f3fc;
+      text-shadow: 0 0 40px #67e8f9, 0 0 80px #22d3ee, 0 0 120px #06b6d4;
       opacity: 0;
       transition: opacity 2.2s ease, transform 2.2s ease;
       pointer-events: none;
@@ -235,12 +236,12 @@
       position: absolute;
       width: 8px;
       height: 60px;
-      background: linear-gradient(#ff6bcb, #d946ef); /* неоновая розовая антенна */
+      background: linear-gradient(#8b5cf6, #6d28d9); /* тёмно-неоново-фиолетовая */
       top: -55px;
       left: 50%;
       transform: translateX(-50%);
       border-radius: 4px 4px 0 0;
-      box-shadow: 0 0 20px #ff6bcb, 0 0 40px #d946ef;
+      box-shadow: 0 0 20px #8b5cf6, 0 0 40px #6d28d9;
     }
 
     .antenna::before {
@@ -248,12 +249,12 @@
       position: absolute;
       width: 16px;
       height: 16px;
-      background: #ff6bcb;
+      background: #8b5cf6;
       border-radius: 50%;
       top: -8px;
       left: 50%;
       transform: translateX(-50%);
-      box-shadow: 0 0 25px #ff6bcb, 0 0 50px #d946ef;
+      box-shadow: 0 0 25px #8b5cf6, 0 0 50px #6d28d9;
     }
   </style>
 </head>
@@ -296,7 +297,7 @@ for (let i = 0; i < 90; i++) {
   const size = Math.random() * 5 + 3;
   s.style.width = s.style.height = size + 'px';
   s.style.left = Math.random() * 100 + '%';
-  s.style.top  = Math.random() * 70 + '%';
+  s.style.top = Math.random() * 70 + '%';
   s.style.animationDelay = Math.random() * 4 + 's';
   starsContainer.appendChild(s);
 }
@@ -305,7 +306,7 @@ for (let i = 0; i < 90; i++) {
 const celestial = document.getElementById('celestial');
 let dragging = false;
 let startY = 0;
-let angle = 90; // старт сверху = день
+let angle = 90;
 
 function updateCelestial() {
   const norm = ((angle % 360) + 360) % 360;
@@ -322,7 +323,7 @@ function updateCelestial() {
   const y = cy + radius * Math.sin(rad);
 
   celestial.style.left = `${x - 60}px`;
-  celestial.style.top  = `${y - 60}px`;
+  celestial.style.top = `${y - 60}px`;
 
   celestial.classList.toggle('moon', isNight);
   celestial.classList.toggle('sun', !isNight);
