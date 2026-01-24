@@ -1,320 +1,283 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Станция — Освещение робота</title>
-<style>
-  :root {
-    --day-sky: linear-gradient(180deg, #87cefa 0%, #e0f7ff 100%);
-    --night-sky: linear-gradient(180deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
-  }
-  body {
-    margin: 0;
-    height: 100vh;
-    font-family: system-ui, sans-serif;
-    background: var(--day-sky);
-    color: white;
-    overflow: hidden;
-    position: relative;
-    transition: background 2s ease;
-  }
-  body.night {
-    background: var(--night-sky);
-  }
-  .scene {
-    position: relative;
-    width: 100%;
-    height: 100%;
-  }
-  /* Облака */
-  .clouds {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    opacity: 1;
-    transition: opacity 1.8s ease;
-  }
-  body.night .clouds {
-    opacity: 0;
-  }
-  .cloud {
-    position: absolute;
-    background: white;
-    border-radius: 50%;
-    opacity: 0.9;
-    box-shadow: 0 8px 20px rgba(255,255,255,0.4);
-    animation: drift 120s linear infinite;
-  }
-  .cloud:nth-child(1) { width: 180px; height: 60px; top: 12%; left: -20%; animation-duration: 180s; }
-  .cloud:nth-child(2) { width: 140px; height: 50px; top: 18%; left: -30%; animation-duration: 220s; animation-delay: -40s; }
-  .cloud:nth-child(3) { width: 220px; height: 80px; top: 8%;  left: -40%; animation-duration: 160s; animation-delay: -80s; }
-  .cloud:nth-child(4) { width: 160px; height: 55px; top: 25%; left: -25%; animation-duration: 200s; animation-delay: -120s; }
-  @keyframes drift {
-    0%   { transform: translateX(0); }
-    100% { transform: translateX(140vw); }
-  }
-  /* Звёзды */
-  .stars {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 1.8s;
-  }
-  body.night .stars {
-    opacity: 0.75;
-  }
-  .star {
-    position: absolute;
-    background: white;
-    border-radius: 50%;
-    box-shadow: 0 0 5px white;
-    animation: twinkle 3.5s infinite alternate;
-  }
-  @keyframes twinkle {
-    0%,100% { opacity: 0.5; transform: scale(0.9); }
-    50%     { opacity: 1;   transform: scale(1.15); }
-  }
-  /* Солнце / Луна */
-  .sun-moon {
-    position: absolute;
-    width: 110px;
-    height: 110px;
-    border-radius: 50%;
-    cursor: grab;
-    transition: all 0.4s ease;
-    z-index: 5;
-  }
-  .sun {
-    background: radial-gradient(circle at 30% 30%, #fffacd, #ffd93b 40%, #ffaa00);
-    box-shadow: 0 0 60px 20px rgba(255,217,59,0.7);
-  }
-  .moon {
-    background: radial-gradient(circle at 30% 30%, #f0f4ff, #e5e7eb 40%, #c0d0ff);
-    box-shadow: 0 0 50px 15px rgba(229,231,235,0.6);
-  }
-  /* Робот */
-  .robot {
-    position: absolute;
-    bottom: 8%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 220px;
-    text-align: center;
-    z-index: 10;
-  }
-  .body {
-    width: 180px;
-    height: 240px;
-    background: linear-gradient(#2d3748, #1a202c);
-    border-radius: 40% 40% 24% 24%;
-    margin: 0 auto;
-    position: relative;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.5),
-                inset 0 10px 20px rgba(255,255,255,0.05);
-  }
-  .head {
-    width: 140px;
-    height: 110px;
-    background: linear-gradient(#4a5568, #2d3748);
-    border-radius: 50%;
-    position: absolute;
-    top: -80px;
-    left: 50%;
-    transform: translateX(-50%);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.4),
-                inset 0 6px 12px rgba(255,255,255,0.08);
-  }
-  .antenna {
-    position: absolute;
-    width: 6px;
-    height: 50px;
-    background: #4fd1c5;
-    top: -40px;
-    left: 50%;
-    transform: translateX(-50%);
-    border-radius: 3px 3px 0 0;
-    box-shadow: 0 0 12px #4fd1c5;
-  }
-  .antenna::before {
-    content: "";
-    position: absolute;
-    width: 12px;
-    height: 12px;
-    background: #4fd1c5;
-    border-radius: 50%;
-    top: -6px;
-    left: 50%;
-    transform: translateX(-50%);
-    box-shadow: 0 0 15px #4fd1c5;
-  }
-  .eyes {
-    position: absolute;
-    top: 38px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 32px;
-  }
-  .eye {
-    width: 28px;
-    height: 28px;
-    background: #111827;
-    border-radius: 50%;
-    position: relative;
-    transition: all 0.6s;
-    box-shadow: inset 0 4px 8px #000;
-  }
-  .eye::before {
-    content: "";
-    position: absolute;
-    width: 12px;
-    height: 12px;
-    background: #fefcbf;
-    border-radius: 50%;
-    top: 6px;
-    left: 6px;
-    transition: all 0.6s;
-  }
-  body.night .eye {
-    background: #111827;
-    box-shadow: 0 0 40px #fde047, 0 0 80px #facc15;
-  }
-  body.night .eye::before {
-    background: #fffb9e;
-    box-shadow: 0 0 20px #fde047;
-    top: 4px;
-    left: 4px;
-    width: 16px;
-    height: 16px;
-  }
-  .instruction {
-    margin-top: 20px;
-    font-size: 17px;
-    color: rgba(255,255,255,0.9);
-    text-shadow: 0 2px 8px black;
-    transition: opacity 1.2s ease;
-  }
-  body.night .instruction {
-    opacity: 0;
-  }
-  .answer {
-    position: absolute;
-    bottom: 5%;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 32px;
-    font-weight: bold;
-    color: #34d399;
-    text-shadow: 0 0 20px #34d399;
-    opacity: 0;
-    transition: opacity 1.4s ease, transform 1.4s ease;
-  }
-  .answer.show {
-    opacity: 1;
-    transform: translateX(-50%) scale(1.08);
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Освещение робота</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100dvh;
+      overflow: hidden;
+      font-family: system-ui, -apple-system, sans-serif;
+      background: linear-gradient(to bottom, #4dabf7, #a5d8ff);
+      color: #fff;
+      position: relative;
+      transition: background 2.5s ease;
+    }
+
+    body.night {
+      background: linear-gradient(to bottom, #0f0c29 0%, #1e1b4b 40%, #2d1b5a 100%);
+    }
+
+    .scene {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Небо + облака днём */
+    .clouds {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      transition: opacity 2s ease;
+    }
+
+    body.night .clouds {
+      opacity: 0;
+    }
+
+    .cloud {
+      position: absolute;
+      background: #fff;
+      border-radius: 999px;
+      opacity: 0.92;
+      box-shadow: 0 10px 30px rgba(255,255,255,0.45);
+      filter: blur(1px);
+    }
+
+    .cloud-1 { width: 220px; height: 80px; top: 10%; left: -15%; animation: drift1 200s linear infinite; }
+    .cloud-2 { width: 160px; height: 60px; top: 16%; left: -25%; animation: drift2 240s linear infinite; animation-delay: -60s; }
+    .cloud-3 { width: 280px; height: 100px; top: 5%;  left: -35%; animation: drift3 180s linear infinite; animation-delay: -120s; }
+
+    @keyframes drift1 { 0% { transform: translateX(0); } 100% { transform: translateX(140vw); } }
+    @keyframes drift2 { 0% { transform: translateX(0); } 100% { transform: translateX(140vw); } }
+    @keyframes drift3 { 0% { transform: translateX(0); } 100% { transform: translateX(140vw); } }
+
+    /* Солнце / Луна */
+    #celestial {
+      position: absolute;
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      left: 50%;
+      top: 18%;
+      transform: translateX(-50%);
+      cursor: grab;
+      user-select: none;
+      touch-action: none;
+      transition: transform 0.15s ease-out, box-shadow 1.5s, background 1.5s;
+      z-index: 10;
+    }
+
+    .sun {
+      background: radial-gradient(circle at 35% 35%, #fff9e6, #ffe066 40%, #ffaa00 80%);
+      box-shadow: 0 0 80px 30px #ffd43b88;
+    }
+
+    .moon {
+      background: radial-gradient(circle at 35% 35%, #f8f9fa, #e9ecef 40%, #ced4da);
+      box-shadow: 0 0 60px 20px #e9ecefaa;
+    }
+
+    /* Робот */
+    .robot {
+      position: absolute;
+      bottom: 6%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 260px;
+      z-index: 5;
+    }
+
+    .body {
+      width: 200px;
+      height: 280px;
+      margin: 0 auto;
+      background: linear-gradient(135deg, #495057, #212529);
+      border-radius: 50px 50px 30px 30px;
+      position: relative;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.55),
+                  inset 0 12px 24px rgba(255,255,255,0.06);
+    }
+
+    .head {
+      width: 160px;
+      height: 130px;
+      background: linear-gradient(135deg, #6c757d, #343a40);
+      border-radius: 50%;
+      position: absolute;
+      top: -90px;
+      left: 50%;
+      transform: translateX(-50%);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.45),
+                  inset 0 8px 16px rgba(255,255,255,0.08);
+    }
+
+    .visor {
+      position: absolute;
+      top: 38px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 110px;
+      height: 44px;
+      background: #111827;
+      border-radius: 22px;
+      overflow: hidden;
+      box-shadow: inset 0 4px 12px #000;
+    }
+
+    .light {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 50% 20%, #fefcbf 0%, transparent 60%);
+      opacity: 0;
+      transition: opacity 1.2s ease;
+    }
+
+    body.night .light {
+      opacity: 0.9;
+      animation: glow 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes glow {
+      0%   { opacity: 0.75; transform: scale(1); }
+      100% { opacity: 1;    transform: scale(1.12); }
+    }
+
+    .beam {
+      position: absolute;
+      bottom: -220px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 180px;
+      height: 400px;
+      background: conic-gradient(from 0deg at 50% 0%, transparent 30deg, #fff176 60deg, transparent 90deg);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 1.8s;
+      filter: blur(18px);
+    }
+
+    body.night .beam {
+      opacity: 0.6;
+    }
+
+    .text {
+      margin-top: 24px;
+      font-size: 18px;
+      text-align: center;
+      color: rgba(255,255,255,0.92);
+      text-shadow: 0 2px 10px rgba(0,0,0,0.7);
+      transition: opacity 1.6s ease;
+    }
+
+    body.night .text {
+      opacity: 0;
+    }
+
+    .reveal {
+      position: absolute;
+      bottom: 8%;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 48px;
+      font-weight: 800;
+      color: #fff176;
+      text-shadow: 0 0 30px #ffeb3b, 0 0 60px #fbc02d;
+      opacity: 0;
+      transition: opacity 2s ease, transform 2s ease;
+      pointer-events: none;
+    }
+
+    body.night .reveal {
+      opacity: 1;
+      transform: translateX(-50%) scale(1.05);
+    }
+  </style>
 </head>
 <body>
 
 <div class="scene">
   <div class="clouds">
-    <div class="cloud"></div>
-    <div class="cloud"></div>
-    <div class="cloud"></div>
-    <div class="cloud"></div>
+    <div class="cloud cloud-1"></div>
+    <div class="cloud cloud-2"></div>
+    <div class="cloud cloud-3"></div>
   </div>
 
-  <div class="stars" id="stars"></div>
-
-  <div class="sun-moon sun" id="sunMoon"></div>
+  <div id="celestial" class="sun-moon sun"></div>
 
   <div class="robot">
     <div class="body">
       <div class="head">
-        <div class="antenna"></div>
-        <div class="eyes">
-          <div class="eye"></div>
-          <div class="eye"></div>
+        <div class="visor">
+          <div class="light"></div>
         </div>
       </div>
     </div>
-    <div class="instruction">Перетаскивай солнце вниз → наступит ночь</div>
+    <div class="text">Фары загораются только ночью…</div>
   </div>
 
-  <div class="answer" id="answer">Слово-ответ: СВЕТ</div>
+  <div class="reveal">СВЕТ</div>
 </div>
 
 <script>
-// Звёзды
-const starsContainer = document.getElementById('stars');
-for (let i = 0; i < 70; i++) {
-  const s = document.createElement('div');
-  s.className = 'star';
-  s.style.width = s.style.height = (Math.random()*2.2 + 0.6)+'px';
-  s.style.left = Math.random()*100 + '%';
-  s.style.top = Math.random()*65 + '%';
-  s.style.animationDelay = Math.random()*5 + 's';
-  starsContainer.appendChild(s);
-}
+  const celestial = document.getElementById('celestial');
+  let isDragging = false;
+  let startY = 0;
+  let angle = 0;           // начальный угол (0 = день, солнце сверху)
 
-// Перетаскивание — как в твоём первом коде
-const sunMoon = document.getElementById('sunMoon');
-const answer = document.getElementById('answer');
-let dragging = false;
-let startY = 0;
-let currentAngle = 90; // старт сверху (день)
+  function updateCelestial() {
+    const norm = ((angle % 360) + 360) % 360;
+    const isNight = norm > 180;
 
-function updateScene(angle) {
-  const normalized = ((angle % 360) + 360) % 360;
-  const isNight = normalized > 180;
+    document.body.classList.toggle('night', isNight);
+    celestial.classList.toggle('moon', isNight);
+    celestial.classList.toggle('sun', !isNight);
 
-  document.body.classList.toggle('night', isNight);
-  answer.classList.toggle('show', isNight);
+    // Позиция по кругу (как в твоём первом варианте)
+    const radius = Math.min(window.innerWidth, window.innerHeight) * 0.4;
+    const cx = window.innerWidth / 2;
+    const cy = window.innerHeight * 0.28;   // центр чуть ниже горизонта
 
-  // Позиция как в твоём первом варианте — круговая орбита
-  const radius = Math.min(window.innerWidth, window.innerHeight) * 0.38;
-  const centerX = window.innerWidth / 2;
-  const centerY = window.innerHeight * 0.32; // центр чуть ниже — солнце видно сразу
+    const rad = norm * Math.PI / 180;
+    let x = cx + radius * Math.cos(rad);
+    let y = cy + radius * Math.sin(rad);
 
-  const rad = normalized * Math.PI / 180;
-  const x = centerX + radius * Math.cos(rad) - sunMoon.offsetWidth / 2;
-  const y = centerY + radius * Math.sin(rad) - sunMoon.offsetHeight / 2;
+    celestial.style.left = `${x - 60}px`;
+    celestial.style.top  = `${y - 60}px`;
+  }
 
-  sunMoon.style.left = x + "px";
-  sunMoon.style.top  = y + "px";
-}
+  function start(e) {
+    isDragging = true;
+    startY = e.touches ? e.touches[0].clientY : e.clientY;
+    e.preventDefault();
+  }
 
-function startDrag(e) {
-  dragging = true;
-  startY = e.touches ? e.touches[0].clientY : e.clientY;
-  e.preventDefault();
-}
+  function move(e) {
+    if (!isDragging) return;
+    const y = e.touches ? e.touches[0].clientY : e.clientY;
+    const delta = y - startY;
+    angle += delta * 0.55;           // скорость вращения (можно настроить)
+    updateCelestial();
+    startY = y;
+  }
 
-function onDrag(e) {
-  if (!dragging) return;
-  const currentY = e.touches ? e.touches[0].clientY : e.clientY;
-  const delta = currentY - startY;
-  currentAngle += delta * 0.6; // скорость как в оригинале, чуть мягче
-  updateScene(currentAngle);
-  startY = currentY;
-}
+  function end() {
+    isDragging = false;
+  }
 
-function stopDrag() {
-  dragging = false;
-}
+  celestial.addEventListener('mousedown', start);
+  celestial.addEventListener('touchstart', start);
+  window.addEventListener('mousemove', move);
+  window.addEventListener('touchmove', move, { passive: false });
+  window.addEventListener('mouseup', end);
+  window.addEventListener('touchend', end);
 
-sunMoon.addEventListener("mousedown", startDrag);
-sunMoon.addEventListener("touchstart", startDrag);
-window.addEventListener("mousemove", onDrag);
-window.addEventListener("touchmove", onDrag, { passive: false });
-window.addEventListener("mouseup", stopDrag);
-window.addEventListener("touchend", stopDrag);
-
-// Инициализация
-updateScene(currentAngle);
+  // Старт — день
+  updateCelestial();
 </script>
 </body>
 </html>
