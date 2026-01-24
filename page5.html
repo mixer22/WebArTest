@@ -26,17 +26,14 @@
       height: 100%;
     }
 
-    /* Небо + облака днём */
+    /* Облака */
     .clouds {
       position: absolute;
       inset: 0;
       pointer-events: none;
       transition: opacity 2s ease;
     }
-
-    body.night .clouds {
-      opacity: 0;
-    }
+    body.night .clouds { opacity: 0; }
 
     .cloud {
       position: absolute;
@@ -46,7 +43,6 @@
       box-shadow: 0 10px 30px rgba(255,255,255,0.45);
       filter: blur(1px);
     }
-
     .cloud-1 { width: 220px; height: 80px; top: 10%; left: -15%; animation: drift1 200s linear infinite; }
     .cloud-2 { width: 160px; height: 60px; top: 16%; left: -25%; animation: drift2 240s linear infinite; animation-delay: -60s; }
     .cloud-3 { width: 280px; height: 100px; top: 5%;  left: -35%; animation: drift3 180s linear infinite; animation-delay: -120s; }
@@ -54,6 +50,30 @@
     @keyframes drift1 { 0% { transform: translateX(0); } 100% { transform: translateX(140vw); } }
     @keyframes drift2 { 0% { transform: translateX(0); } 100% { transform: translateX(140vw); } }
     @keyframes drift3 { 0% { transform: translateX(0); } 100% { transform: translateX(140vw); } }
+
+    /* Звёзды — квадратные, пиксельные, только ночью */
+    .stars {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 2s ease;
+    }
+    body.night .stars { opacity: 0.9; }
+
+    .star {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: #fff;
+      box-shadow: 0 0 8px #fff, 0 0 16px #fff;
+      animation: twinkle 2.5s infinite alternate;
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.6; transform: scale(0.8); }
+      50%      { opacity: 1;   transform: scale(1.3); }
+    }
 
     /* Солнце / Луна */
     #celestial {
@@ -132,37 +152,44 @@
       position: absolute;
       width: 100%;
       height: 100%;
-      background: radial-gradient(circle at 50% 20%, #fefcbf 0%, transparent 60%);
+      background: radial-gradient(circle at 50% 10%, #fff176 0%, transparent 55%);
       opacity: 0;
       transition: opacity 1.2s ease;
     }
 
     body.night .light {
-      opacity: 0.9;
-      animation: glow 3s ease-in-out infinite alternate;
+      opacity: 1;
+      animation: brightGlow 2.8s ease-in-out infinite alternate;
     }
 
-    @keyframes glow {
-      0%   { opacity: 0.75; transform: scale(1); }
-      100% { opacity: 1;    transform: scale(1.12); }
+    @keyframes brightGlow {
+      0%   { opacity: 0.85; transform: scale(1.02); }
+      100% { opacity: 1;    transform: scale(1.18); }
     }
 
     .beam {
       position: absolute;
-      bottom: -220px;
+      bottom: -300px;
       left: 50%;
       transform: translateX(-50%);
-      width: 180px;
-      height: 400px;
-      background: conic-gradient(from 0deg at 50% 0%, transparent 30deg, #fff176 60deg, transparent 90deg);
+      width: 240px;
+      height: 550px;
+      background: conic-gradient(from 0deg at 50% 0%, transparent 20deg, #fff176 50deg, #ffeb3b 70deg, transparent 100deg);
       opacity: 0;
       pointer-events: none;
       transition: opacity 1.8s;
-      filter: blur(18px);
+      filter: blur(24px);
+      mix-blend-mode: screen;
     }
 
     body.night .beam {
-      opacity: 0.6;
+      opacity: 0.75;
+      animation: beamPulse 4s ease-in-out infinite;
+    }
+
+    @keyframes beamPulse {
+      0%,100% { opacity: 0.75; transform: translateX(-50%) scale(1); }
+      50%     { opacity: 0.95; transform: translateX(-50%) scale(1.08); }
     }
 
     .text {
@@ -183,18 +210,25 @@
       bottom: 8%;
       left: 50%;
       transform: translateX(-50%);
-      font-size: 48px;
-      font-weight: 800;
+      font-size: 56px;
+      font-weight: 900;
       color: #fff176;
-      text-shadow: 0 0 30px #ffeb3b, 0 0 60px #fbc02d;
+      text-shadow: 0 0 40px #ffeb3b, 0 0 80px #fbc02d, 0 0 120px #f59e0b;
       opacity: 0;
-      transition: opacity 2s ease, transform 2s ease;
+      transition: opacity 2.2s ease, transform 2.2s ease;
       pointer-events: none;
+      letter-spacing: 4px;
     }
 
     body.night .reveal {
       opacity: 1;
-      transform: translateX(-50%) scale(1.05);
+      transform: translateX(-50%) scale(1.06);
+      animation: revealPulse 3s ease-in-out infinite;
+    }
+
+    @keyframes revealPulse {
+      0%,100% { transform: translateX(-50%) scale(1.06); }
+      50%     { transform: translateX(-50%) scale(1.12); }
     }
   </style>
 </head>
@@ -206,6 +240,8 @@
     <div class="cloud cloud-2"></div>
     <div class="cloud cloud-3"></div>
   </div>
+
+  <div class="stars" id="stars"></div>
 
   <div id="celestial" class="sun-moon sun"></div>
 
@@ -221,63 +257,78 @@
   </div>
 
   <div class="reveal">СВЕТ</div>
+
+  <div class="beam"></div>
 </div>
 
 <script>
-  const celestial = document.getElementById('celestial');
-  let isDragging = false;
-  let startY = 0;
-  let angle = 0;           // начальный угол (0 = день, солнце сверху)
+// Квадратные звёзды
+const starsContainer = document.getElementById('stars');
+for (let i = 0; i < 90; i++) {
+  const s = document.createElement('div');
+  s.className = 'star';
+  const size = Math.random() * 5 + 3;
+  s.style.width = s.style.height = size + 'px';
+  s.style.left = Math.random() * 100 + '%';
+  s.style.top  = Math.random() * 70 + '%';
+  s.style.animationDelay = Math.random() * 4 + 's';
+  starsContainer.appendChild(s);
+}
 
-  function updateCelestial() {
-    const norm = ((angle % 360) + 360) % 360;
-    const isNight = norm > 180;
+// Перетаскивание (как в твоём первом варианте)
+const celestial = document.getElementById('celestial');
+let dragging = false;
+let startY = 0;
+let angle = 90; // старт сверху = день
 
-    document.body.classList.toggle('night', isNight);
-    celestial.classList.toggle('moon', isNight);
-    celestial.classList.toggle('sun', !isNight);
+function updateCelestial() {
+  const norm = ((angle % 360) + 360) % 360;
+  const isNight = norm > 180;
 
-    // Позиция по кругу (как в твоём первом варианте)
-    const radius = Math.min(window.innerWidth, window.innerHeight) * 0.4;
-    const cx = window.innerWidth / 2;
-    const cy = window.innerHeight * 0.28;   // центр чуть ниже горизонта
+  document.body.classList.toggle('night', isNight);
 
-    const rad = norm * Math.PI / 180;
-    let x = cx + radius * Math.cos(rad);
-    let y = cy + radius * Math.sin(rad);
+  const radius = Math.min(window.innerWidth, window.innerHeight) * 0.38;
+  const cx = window.innerWidth / 2;
+  const cy = window.innerHeight * 0.32;
 
-    celestial.style.left = `${x - 60}px`;
-    celestial.style.top  = `${y - 60}px`;
-  }
+  const rad = norm * Math.PI / 180;
+  const x = cx + radius * Math.cos(rad);
+  const y = cy + radius * Math.sin(rad);
 
-  function start(e) {
-    isDragging = true;
-    startY = e.touches ? e.touches[0].clientY : e.clientY;
-    e.preventDefault();
-  }
+  celestial.style.left = `${x - 60}px`;
+  celestial.style.top  = `${y - 60}px`;
 
-  function move(e) {
-    if (!isDragging) return;
-    const y = e.touches ? e.touches[0].clientY : e.clientY;
-    const delta = y - startY;
-    angle += delta * 0.55;           // скорость вращения (можно настроить)
-    updateCelestial();
-    startY = y;
-  }
+  celestial.classList.toggle('moon', isNight);
+  celestial.classList.toggle('sun', !isNight);
+}
 
-  function end() {
-    isDragging = false;
-  }
+function start(e) {
+  dragging = true;
+  startY = e.touches ? e.touches[0].clientY : e.clientY;
+  e.preventDefault();
+}
 
-  celestial.addEventListener('mousedown', start);
-  celestial.addEventListener('touchstart', start);
-  window.addEventListener('mousemove', move);
-  window.addEventListener('touchmove', move, { passive: false });
-  window.addEventListener('mouseup', end);
-  window.addEventListener('touchend', end);
-
-  // Старт — день
+function move(e) {
+  if (!dragging) return;
+  const y = e.touches ? e.touches[0].clientY : e.clientY;
+  const delta = y - startY;
+  angle += delta * 0.55;
   updateCelestial();
+  startY = y;
+}
+
+function end() {
+  dragging = false;
+}
+
+celestial.addEventListener('mousedown', start);
+celestial.addEventListener('touchstart', start);
+window.addEventListener('mousemove', move);
+window.addEventListener('touchmove', move, { passive: false });
+window.addEventListener('mouseup', end);
+window.addEventListener('touchend', end);
+
+updateCelestial();
 </script>
 </body>
 </html>
