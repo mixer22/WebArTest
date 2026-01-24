@@ -6,7 +6,7 @@
 <title>Станция — Освещение робота</title>
 <style>
   :root {
-    --day-sky: linear-gradient(180deg, #4facfe 0%, #00f2fe 100%);
+    --day-sky: linear-gradient(180deg, #87cefa 0%, #e0f7ff 100%);
     --night-sky: linear-gradient(180deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
   }
 
@@ -18,7 +18,7 @@
     color: white;
     overflow: hidden;
     position: relative;
-    transition: background 1.8s ease;
+    transition: background 2s ease;
   }
 
   body.night {
@@ -31,30 +31,62 @@
     height: 100%;
   }
 
-  /* Небо + звёзды ночью */
+  /* Облака */
+  .clouds {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 1;
+    transition: opacity 1.8s ease;
+  }
+
+  body.night .clouds {
+    opacity: 0;
+  }
+
+  .cloud {
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+    opacity: 0.9;
+    box-shadow: 0 8px 20px rgba(255,255,255,0.4);
+    animation: drift 120s linear infinite;
+  }
+
+  .cloud:nth-child(1) { width: 180px; height: 60px; top: 12%; left: -20%; animation-duration: 180s; }
+  .cloud:nth-child(2) { width: 140px; height: 50px; top: 18%; left: -30%; animation-duration: 220s; animation-delay: -40s; }
+  .cloud:nth-child(3) { width: 220px; height: 80px; top: 8%;  left: -40%; animation-duration: 160s; animation-delay: -80s; }
+  .cloud:nth-child(4) { width: 160px; height: 55px; top: 25%; left: -25%; animation-duration: 200s; animation-delay: -120s; }
+
+  @keyframes drift {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(140vw); }
+  }
+
+  /* Звёзды */
   .stars {
     position: absolute;
     inset: 0;
     pointer-events: none;
     opacity: 0;
-    transition: opacity 1.5s;
+    transition: opacity 1.8s;
   }
 
   body.night .stars {
-    opacity: 0.8;
+    opacity: 0.75;
   }
 
   .star {
     position: absolute;
     background: white;
     border-radius: 50%;
-    box-shadow: 0 0 6px white;
-    animation: twinkle 4s infinite alternate;
+    box-shadow: 0 0 5px white;
+    animation: twinkle 3.5s infinite alternate;
   }
 
   @keyframes twinkle {
-    0% { opacity: 0.4; transform: scale(0.8); }
-    100% { opacity: 1; transform: scale(1.2); }
+    0%,100% { opacity: 0.5; transform: scale(0.9); }
+    50%     { opacity: 1;   transform: scale(1.15); }
   }
 
   /* Солнце / Луна */
@@ -63,19 +95,19 @@
     width: 110px;
     height: 110px;
     border-radius: 50%;
-    top: 15%;
-    left: 50%;
-    transform: translate(-50%, -50%);
     cursor: grab;
-    transition: all 0.4s ease;
-    box-shadow: 0 0 60px 20px rgba(255, 217, 59, 0.7);
-    background: radial-gradient(circle at 30% 30%, #fffacd, #ffd93b 40%, #ffaa00);
+    transition: all 0.3s ease;
     z-index: 5;
   }
 
-  body.night .sun-moon {
+  .sun {
+    background: radial-gradient(circle at 30% 30%, #fffacd, #ffd93b 40%, #ffaa00);
+    box-shadow: 0 0 60px 20px rgba(255,217,59,0.7);
+  }
+
+  .moon {
     background: radial-gradient(circle at 30% 30%, #f0f4ff, #e5e7eb 40%, #c0d0ff);
-    box-shadow: 0 0 50px 15px rgba(229, 231, 235, 0.6);
+    box-shadow: 0 0 50px 15px rgba(229,231,235,0.6);
   }
 
   /* Робот */
@@ -183,11 +215,16 @@
     height: 16px;
   }
 
-  .text {
+  .instruction {
     margin-top: 20px;
     font-size: 17px;
     color: rgba(255,255,255,0.9);
     text-shadow: 0 2px 8px black;
+    transition: opacity 1.2s ease;
+  }
+
+  body.night .instruction {
+    opacity: 0;
   }
 
   .answer {
@@ -200,127 +237,117 @@
     color: #34d399;
     text-shadow: 0 0 20px #34d399;
     opacity: 0;
-    transition: opacity 1.2s ease, transform 1.2s ease;
+    transition: opacity 1.4s ease, transform 1.4s ease;
   }
 
   .answer.show {
     opacity: 1;
-    transform: translateX(-50%) scale(1.1);
-  }
-
-  /* Лучи света от фар ночью */
-  .beam {
-    position: absolute;
-    width: 120px;
-    height: 300px;
-    background: linear-gradient(to bottom, rgba(253,224,71,0.4), transparent);
-    top: -140px;
-    left: 50%;
-    transform: translateX(-50%) rotate(0deg);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 1s;
-    filter: blur(12px);
-  }
-
-  body.night .beam {
-    opacity: 0.7;
+    transform: translateX(-50%) scale(1.08);
   }
 </style>
 </head>
 <body>
 
 <div class="scene">
+  <div class="clouds">
+    <div class="cloud"></div>
+    <div class="cloud"></div>
+    <div class="cloud"></div>
+    <div class="cloud"></div>
+  </div>
+
   <div class="stars" id="stars"></div>
 
-  <div class="sun-moon" id="sunMoon"></div>
+  <div class="sun-moon sun" id="sunMoon"></div>
 
   <div class="robot">
     <div class="body">
       <div class="head">
         <div class="antenna"></div>
         <div class="eyes">
-          <div class="eye"><div class="beam"></div></div>
-          <div class="eye"><div class="beam"></div></div>
+          <div class="eye"></div>
+          <div class="eye"></div>
         </div>
       </div>
     </div>
-    <div class="text">Робот включает фары только ночью</div>
+    <div class="instruction">Перетаскивай солнце вниз → наступит ночь</div>
   </div>
 
   <div class="answer" id="answer">Слово-ответ: СВЕТ</div>
 </div>
 
 <script>
-// Создаём звёзды
+// Звёзды
 const starsContainer = document.getElementById('stars');
-for (let i = 0; i < 80; i++) {
-  const star = document.createElement('div');
-  star.className = 'star';
-  star.style.width = star.style.height = (Math.random() * 2 + 0.8) + 'px';
-  star.style.left = Math.random() * 100 + '%';
-  star.style.top = Math.random() * 60 + '%';
-  star.style.animationDelay = Math.random() * 4 + 's';
-  starsContainer.appendChild(star);
+for (let i = 0; i < 70; i++) {
+  const s = document.createElement('div');
+  s.className = 'star';
+  s.style.width = s.style.height = (Math.random()*2.2 + 0.6)+'px';
+  s.style.left = Math.random()*100 + '%';
+  s.style.top  = Math.random()*65 + '%';
+  s.style.animationDelay = Math.random()*5 + 's';
+  starsContainer.appendChild(s);
 }
 
+// Перетаскивание
 const sunMoon = document.getElementById('sunMoon');
 const answer = document.getElementById('answer');
-let dragging = false;
+let isDragging = false;
 let startY = 0;
-let currentAngle = 90; // старт с дня (90° — солнце сверху)
+let currentAngle = 0; // 0° — солнце сверху (день)
 
-// Обновление сцены
-function updateScene(angle) {
-  const norm = ((angle % 360) + 360) % 360;
-  const isNight = norm > 180 && norm < 360;
+function updateSunMoon() {
+  const norm = ((currentAngle % 360) + 360) % 360;
+  const isNight = norm > 90 && norm < 270;
 
   document.body.classList.toggle('night', isNight);
   answer.classList.toggle('show', isNight);
 
-  // Позиция по дуге
-  const radiusX = window.innerWidth * 0.45;
-  const radiusY = window.innerHeight * 0.35;
-  const centerX = window.innerWidth / 2;
-  const centerY = window.innerHeight * 0.18;
+  // Движение по кругу (эллипс чуть сплюснутый по вертикали)
+  const radiusX = window.innerWidth  * 0.42;
+  const radiusY = window.innerHeight * 0.32;
+  const centerX = window.innerWidth  / 2;
+  const centerY = window.innerHeight * 0.22;
 
-  const rad = (norm - 90) * Math.PI / 180; // смещение на 90° чтобы начиналось сверху
+  const rad = (currentAngle - 90) * Math.PI / 180;
   const x = centerX + radiusX * Math.cos(rad);
   const y = centerY + radiusY * Math.sin(rad);
 
-  sunMoon.style.left = x + 'px';
-  sunMoon.style.top = y + 'px';
+  sunMoon.style.left = `${x - sunMoon.offsetWidth / 2}px`;
+  sunMoon.style.top  = `${y - sunMoon.offsetHeight / 2}px`;
+
+  // Поворот самого элемента (для красоты)
+  sunMoon.style.transform = `rotate(${currentAngle}deg)`;
 }
 
-// Drag & Touch
 function startDrag(e) {
-  dragging = true;
+  isDragging = true;
   startY = e.touches ? e.touches[0].clientY : e.clientY;
   e.preventDefault();
 }
 
-function onDrag(e) {
-  if (!dragging) return;
+function moveDrag(e) {
+  if (!isDragging) return;
   const y = e.touches ? e.touches[0].clientY : e.clientY;
   const delta = y - startY;
-  currentAngle += delta * 0.8; // чувствительность
-  updateScene(currentAngle);
+  currentAngle += delta * 0.45; // чувствительность — можно настроить
+  updateSunMoon();
   startY = y;
 }
 
-function stopDrag() {
-  dragging = false;
+function endDrag() {
+  isDragging = false;
 }
 
 sunMoon.addEventListener('mousedown', startDrag);
 sunMoon.addEventListener('touchstart', startDrag);
-window.addEventListener('mousemove', onDrag);
-window.addEventListener('touchmove', onDrag, { passive: false });
-window.addEventListener('mouseup', stopDrag);
-window.addEventListener('touchend', stopDrag);
+window.addEventListener('mousemove', moveDrag);
+window.addEventListener('touchmove', moveDrag, { passive: false });
+window.addEventListener('mouseup', endDrag);
+window.addEventListener('touchend', endDrag);
 
-// Инициализация
-updateScene(currentAngle);
+// Стартовая позиция — день
+updateSunMoon();
 </script>
 </body>
 </html>
