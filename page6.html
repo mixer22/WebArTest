@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<title>Ветряная батарейка</title>
+<title>Батарейка</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
   body {
@@ -218,7 +218,7 @@ function startDrag(e) {
       if (delta < -180) delta += 360;
       rotation += delta;
       blades.setAttribute("transform", `rotate(${rotation} 50 50)`);
-      increaseCharge(Math.abs(delta) * 0.0015);
+      increaseCharge(Math.abs(delta) * 0.003);
     }
     lastAngle = angle;
   }
