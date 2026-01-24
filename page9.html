@@ -32,7 +32,7 @@
       border-radius: 20px;
       padding: 30px;
       box-shadow: 0 20px 60px rgba(0,0,0,0.6);
-      max-width: 480px;
+      max-width: 540px;
       width: 90%;
       text-align: center;
     }
@@ -232,7 +232,7 @@
         powerDisplay.classList.remove('high');
       }
 
-      if (currentPower = 200) { // можно сделать строго = 200
+      if (currentPower == 200) { // можно сделать строго = 200
         answer.classList.add('show');
         status.textContent = 'Отлично!';
         status.style.color = '#34d399';
