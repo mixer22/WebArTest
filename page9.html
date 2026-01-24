@@ -25,6 +25,17 @@
       text-shadow: 0 0 15px #60a5fa88;
     }
 
+    .footer {
+      margin-top: 2em;
+      padding: 12px 16px;
+      background: rgba(2, 6, 23, 0.7);
+      border-radius: 12px;
+      text-align: center;
+      font-size: clamp(12px, 3.2vw, 14px);
+      width: 100%;
+      max-width: var(--max-grid-width);
+    }
+
     .container {
       background: rgba(15, 23, 42, 0.7);
       backdrop-filter: blur(10px);
@@ -32,7 +43,7 @@
       border-radius: 20px;
       padding: 30px;
       box-shadow: 0 20px 60px rgba(0,0,0,0.6);
-      max-width: 540px;
+      max-width: 580px;
       width: 90%;
       text-align: center;
     }
@@ -171,7 +182,7 @@
       <div class="name">Зарядка телефона</div>
       <div class="watts">10 Вт</div>
     </div>
-    <div class="device" data-watts="80">
+    <div class="device" data-watts="70">
       <div class="icon">🖥️</div>
       <div class="name">Ноутбук</div>
       <div class="watts">70 Вт</div>
@@ -191,6 +202,7 @@
   <div class="status" id="status">Выберите приборы, чтобы достигнуть лимита</div>
 
   <div class="answer" id="answer">ЭНЕРГОСБЕРЕЖЕНИЕ</div>
+  <div class="footer">· РОБОСИБ · 2026</div>
 </div>
 
 <script>
