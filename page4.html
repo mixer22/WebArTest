@@ -8,36 +8,31 @@
         :root {
             --primary: #0ea5e9;
             --primary-glow: #38bdf8;
-            --accent: #a78bfa;
-            --success: #34d399;
-            --error: #f87171;
+            --success: #22c55e;
+            --error: #ef4444;
             --bg: #0a0e17;
-            --card-bg: rgba(15, 23, 42, 0.68);
+            --card-bg: rgba(15, 23, 42, 0.7);
         }
 
         * { box-sizing: border-box; }
 
         body {
             margin: 0;
-            padding: 0;
+            padding: 20px 0;
             font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
             background: var(--bg);
             color: #e0f2fe;
             min-height: 100vh;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
-            position: relative;
-            overflow: hidden;
         }
 
         body::before {
             content: "";
             position: absolute;
             inset: 0;
-            background: 
-                radial-gradient(circle at 25% 35%, rgba(14,165,233,0.15) 0%, transparent 45%),
-                radial-gradient(circle at 75% 65%, rgba(167,139,250,0.1) 0%, transparent 50%);
+            background: radial-gradient(circle at 30% 20%, rgba(14,165,233,0.12) 0%, transparent 50%);
             pointer-events: none;
         }
 
@@ -45,16 +40,11 @@
             width: 92%;
             max-width: 460px;
             background: var(--card-bg);
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
-            border: 1px solid rgba(14,165,233,0.2);
-            border-radius: 28px;
-            padding: 32px 24px;
-            box-shadow: 
-                0 20px 60px rgba(0,0,0,0.6),
-                0 0 40px rgba(14,165,233,0.12) inset;
-            position: relative;
-            z-index: 1;
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(14,165,233,0.22);
+            border-radius: 24px;
+            padding: 28px 22px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.55);
         }
 
         h1 {
@@ -62,24 +52,17 @@
             font-size: 28px;
             margin: 0 0 24px;
             color: #e0f2fe;
-            text-shadow: 0 0 15px var(--primary);
-            letter-spacing: 1.2px;
+            text-shadow: 0 0 12px var(--primary);
         }
 
         .emoji {
             text-align: center;
-            font-size: 64px;
+            font-size: 60px;
             margin-bottom: 16px;
-            animation: spark 4s ease-in-out infinite;
-        }
-
-        @keyframes spark {
-            0%, 100% { transform: scale(1); opacity: 0.9; }
-            50%      { transform: scale(1.1); opacity: 1; }
         }
 
         .question {
-            margin-bottom: 28px;
+            margin-bottom: 32px;
         }
 
         .question-title {
@@ -93,48 +76,66 @@
         .options {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 12px;
         }
 
         .option {
-            background: rgba(30,41,59,0.5);
+            background: rgba(30,41,59,0.6);
             border: 2px solid transparent;
             border-radius: 16px;
             padding: 16px 18px;
             cursor: pointer;
             font-size: 15px;
-            transition: all 0.3s ease;
+            transition: all 0.25s ease;
             position: relative;
-            overflow: hidden;
         }
 
         .option:hover {
-            background: rgba(14,165,233,0.12);
+            background: rgba(14,165,233,0.15);
             transform: translateY(-2px);
         }
 
         .option.selected {
             border-color: var(--primary-glow);
-            background: rgba(14,165,233,0.22);
-            box-shadow: 0 0 20px rgba(56,189,248,0.3);
+            background: rgba(14,165,233,0.25);
         }
 
-        .option::before {
-            content: "";
+        .option.correct {
+            background: rgba(34,197,94,0.25);
+            border-color: var(--success);
+            color: #ecfdf5;
+        }
+
+        .option.correct::after {
+            content: "✓";
             position: absolute;
-            inset: 0;
-            background: linear-gradient(90deg, transparent, rgba(56,189,248,0.08), transparent);
-            transform: translateX(-100%);
-            transition: transform 0.6s;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--success);
+            font-weight: bold;
+            font-size: 18px;
         }
 
-        .option.selected::before {
-            transform: translateX(100%);
+        .option.wrong {
+            background: rgba(239,68,68,0.25);
+            border-color: var(--error);
+            color: #fee2e2;
+        }
+
+        .option.wrong::after {
+            content: "✗";
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--error);
+            font-weight: bold;
+            font-size: 18px;
         }
 
         button {
             width: 100%;
-            margin-top: 20px;
             padding: 16px;
             border: none;
             border-radius: 18px;
@@ -143,18 +144,16 @@
             font-size: 17px;
             font-weight: 700;
             cursor: pointer;
-            box-shadow: 0 8px 25px rgba(14,165,233,0.4);
-            transition: all 0.3s ease;
-            letter-spacing: 0.8px;
+            transition: all 0.3s;
+            margin-top: 20px;
         }
 
         button:hover {
             background: var(--primary-glow);
             transform: translateY(-3px);
-            box-shadow: 0 12px 35px rgba(14,165,233,0.5);
         }
 
-        .result {
+        #result {
             margin-top: 24px;
             text-align: center;
             font-size: 17px;
@@ -164,25 +163,14 @@
             min-height: 60px;
         }
 
-        .success {
-            background: rgba(52,211,153,0.15);
-            border: 2px solid var(--success);
-            color: var(--success);
-            box-shadow: 0 0 25px rgba(52,211,153,0.3);
-        }
-
-        .error {
-            background: rgba(248,113,113,0.15);
-            border: 2px solid var(--error);
-            color: var(--error);
-        }
+        .success { background: rgba(34,197,94,0.2); border: 2px solid var(--success); color: var(--success); }
+        .error   { background: rgba(239,68,68,0.2);  border: 2px solid var(--error);   color: var(--error);   }
 
         .footer {
-            text-align: center;
-            margin-top: 28px;
+            margin-top: 32px;
             font-size: 13px;
             opacity: 0.7;
-            letter-spacing: 0.8px;
+            text-align: center;
         }
     </style>
 </head>
@@ -193,9 +181,7 @@
     <h1>Энерго-квиз</h1>
 
     <div class="question" data-correct="2">
-        <div class="question-title">
-            1️⃣ Какой вид энергии использует ветряная электростанция?
-        </div>
+        <div class="question-title">1. Какой вид энергии использует ветряная электростанция?</div>
         <div class="options">
             <div class="option">Тепловую</div>
             <div class="option">Энергию ветра</div>
@@ -204,9 +190,7 @@
     </div>
 
     <div class="question" data-correct="1">
-        <div class="question-title">
-            2️⃣ Что является возобновляемым источником энергии?
-        </div>
+        <div class="question-title">2. Что является возобновляемым источником энергии?</div>
         <div class="options">
             <div class="option">Солнце, ветер, вода</div>
             <div class="option">Уголь</div>
@@ -215,9 +199,7 @@
     </div>
 
     <div class="question" data-correct="3">
-        <div class="question-title">
-            3️⃣ Как называется энергия, которую мы сохраняем, выключая свет?
-        </div>
+        <div class="question-title">3. Как называется энергия, которую мы экономим, выключая свет?</div>
         <div class="options">
             <div class="option">Солнечная</div>
             <div class="option">Атомная</div>
@@ -229,19 +211,18 @@
 
     <div id="result" class="result"></div>
 
-    <div class="footer">
-         · РОБОСИБ 2026·
-    </div>
+    <div class="footer">· РОБОСИБ · 2026</div>
 </div>
 
 <script>
+    // Выбор варианта
     document.querySelectorAll('.options').forEach(options => {
         const opts = options.querySelectorAll('.option');
-        opts.forEach((option, index) => {
-            option.addEventListener('click', () => {
+        opts.forEach((opt, idx) => {
+            opt.addEventListener('click', () => {
                 opts.forEach(o => o.classList.remove('selected'));
-                option.classList.add('selected');
-                options.parentElement.dataset.selected = index + 1;
+                opt.classList.add('selected');
+                options.parentElement.dataset.selected = idx + 1;
             });
         });
     });
@@ -250,23 +231,45 @@
         const questions = document.querySelectorAll('.question');
         let allCorrect = true;
 
-        questions.forEach(q => {
-            if (!q.dataset.selected || q.dataset.selected !== q.dataset.correct) {
+        questions.forEach(question => {
+            const selected = question.dataset.selected;
+            const correct = question.dataset.correct;
+            const options = question.querySelectorAll('.option');
+
+            // Сначала снимаем все метки correct/wrong
+            options.forEach(opt => {
+                opt.classList.remove('correct', 'wrong');
+            });
+
+            if (selected) {
+                const chosenIndex = Number(selected) - 1;
+                const chosenOption = options[chosenIndex];
+
+                if (selected === correct) {
+                    chosenOption.classList.add('correct');
+                } else {
+                    chosenOption.classList.add('wrong');
+                    allCorrect = false;
+                    // Показываем правильный ответ
+                    options[Number(correct) - 1].classList.add('correct');
+                }
+            } else {
                 allCorrect = false;
+                // Показываем правильный, если ничего не выбрано
+                options[Number(correct) - 1].classList.add('correct');
             }
         });
 
-        const result = document.getElementById('result');
+        const resultEl = document.getElementById('result');
 
         if (allCorrect) {
-            result.innerHTML = '✅ Отлично! Все ответы верны!<br><br>🔑 Слово-пароль: <b>ВОЗОБНОВЛЯЕМАЯ</b>';
-            result.className = 'result success';
+            resultEl.innerHTML = '✅ Всё верно!<br>Слово-пароль: <b>ВОЗОБНОВЛЯЕМАЯ</b>';
+            resultEl.className = 'result success';
         } else {
-            result.textContent = '❌ Не все ответы верны. Попробуй ещё раз!';
-            result.className = 'result error';
+            resultEl.textContent = '❌ Есть ошибки — смотри подсветку';
+            resultEl.className = 'result error';
         }
     }
 </script>
-
 </body>
 </html>
