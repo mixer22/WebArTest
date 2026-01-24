@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Гидроэлектростанция</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      height: 100dvh;
+      overflow: hidden;
+      font-family: system-ui, -apple-system, sans-serif;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      color: #e5e7eb;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      font-size: 2.2rem;
+      text-shadow: 0 0 15px #60a5fa88;
+      z-index: 3;
+    }
+
+    .scene {
+      position: relative;
+      width: 320px;
+      height: 420px;
+      background: #111827;
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.7);
+      z-index: 2;
+    }
+
+    /* Водохранилище */
+    .reservoir {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 50%;
+      background: linear-gradient(to bottom, #60a5fa, #3b82f6);
+      transition: height 0.6s ease-out;
+      overflow: hidden;
+    }
+
+    .water-surface {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 40px;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.3), transparent);
+      animation: wave 6s infinite linear;
+    }
+
+    @keyframes wave {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-100px); }
+    }
+
+    /* Плотина */
+    .dam {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      width: 100%;
+      height: 20px;
+      background: #4b5563;
+      z-index: 2;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+    }
+
+    /* Турбина */
+    .turbine {
+      position: absolute;
+      top: 52%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 80px;
+      z-index: 3;
+    }
+
+    .turbine svg {
+      width: 100%;
+      height: 100%;
+      animation: spin 0s linear infinite;
+      transform-origin: center;
+    }
+
+    body.charging .turbine svg {
+      animation-duration: 1.2s;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+
+    /* Индикатор энергии */
+    .energy-bar {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 240px;
+      height: 30px;
+      background: #1e293b;
+      border: 3px solid #60a5fa;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 0 20px rgba(96,165,250,0.3);
+    }
+
+    .energy-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(to right, #34d399, #10b981);
+      transition: width 0.4s ease-out;
+      box-shadow: 0 0 15px #34d399 inset;
+    }
+
+    .answer {
+      margin-top: 40px;
+      font-size: 3rem;
+      font-weight: 900;
+      color: #34d399;
+      text-shadow: 0 0 30px #34d399, 0 0 60px #059669;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 1.2s ease;
+    }
+
+    .answer.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+<h1>⚡ Заполни водохранилище!</h1>
+
+<div class="scene">
+  <div class="reservoir" id="reservoir">
+    <div class="water-surface"></div>
+  </div>
+  <div class="dam"></div>
+
+  <div class="turbine">
+    <svg viewBox="0 0 100 100">
+      <g id="turbineBlades">
+        <path d="M50,50 L30,20 Q25,15 20,25 L40,50 Z" fill="#60a5fa" stroke="#3b82f6" stroke-width="2"/>
+        <path d="M50,50 L80,30 Q85,25 75,20 L50,40 Z" fill="#60a5fa" stroke="#3b82f6" stroke-width="2" transform="rotate(120 50 50)"/>
+        <path d="M50,50 L70,80 Q75,85 80,75 L50,60 Z" fill="#60a5fa" stroke="#3b82f6" stroke-width="2" transform="rotate(240 50 50)"/>
+        <circle cx="50" cy="50" r="12" fill="#1e293b" stroke="#60a5fa" stroke-width="3"/>
+      </g>
+    </svg>
+  </div>
+
+  <div class="energy-bar">
+    <div class="energy-fill" id="energyFill"></div>
+  </div>
+</div>
+
+<div class="answer" id="answer">ТУРБИНА</div>
+
+<script>
+  const reservoir = document.getElementById('reservoir');
+  const energyFill = document.getElementById('energyFill');
+  const answer = document.getElementById('answer');
+  const turbine = document.querySelector('.turbine svg');
+
+  let waterLevel = 30; // начальный уровень воды в %
+  let energy = 0;
+
+  reservoir.style.height = waterLevel + '%';
+
+  function updateWater(delta) {
+    waterLevel = Math.max(0, Math.min(100, waterLevel + delta));
+    reservoir.style.height = waterLevel + '%';
+
+    // Чем выше вода — тем быстрее заряд
+    if (waterLevel > 60) {
+      energy += (waterLevel - 60) * 0.08;
+      if (energy > 100) energy = 100;
+      energyFill.style.width = energy + '%';
+
+      document.body.classList.add('charging');
+      if (energy >= 100) {
+        answer.classList.add('show');
+      }
+    } else {
+      document.body.classList.remove('charging');
+    }
+  }
+
+  // Перетаскивание по вертикали
+  let isDragging = false;
+  let startY = 0;
+
+  function start(e) {
+    isDragging = true;
+    startY = e.touches ? e.touches[0].clientY : e.clientY;
+    e.preventDefault();
+  }
+
+  function move(e) {
+    if (!isDragging) return;
+    const y = e.touches ? e.touches[0].clientY : e.clientY;
+    const delta = (startY - y) * 0.3; // вверх — поднимаем воду
+    updateWater(delta);
+    startY = y;
+  }
+
+  function end() {
+    isDragging = false;
+  }
+
+  document.addEventListener('mousedown', start);
+  document.addEventListener('touchstart', start);
+  document.addEventListener('mousemove', move);
+  document.addEventListener('touchmove', move, { passive: false });
+  document.addEventListener('mouseup', end);
+  document.addEventListener('touchend', end);
+</script>
+</body>
+</html>
