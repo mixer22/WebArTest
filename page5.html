@@ -313,8 +313,8 @@ for (let i = 0; i < 90; i++) {
 // Перетаскивание
 const celestial = document.getElementById('celestial');
 let dragging = false;
-let startY = 0;
-let angle = 90;
+let startY = 200;
+let angle = 0;
 
 function updateCelestial() {
   const norm = ((angle % 360) + 360) % 360;
@@ -324,7 +324,7 @@ function updateCelestial() {
 
   const radius = Math.min(window.innerWidth, window.innerHeight) * 0.38;
   const cx = window.innerWidth / 2;
-  const cy = window.innerHeight * 0.32;
+  const cy = window.innerHeight * 0.22;
 
   const rad = norm * Math.PI / 180;
   const x = cx + radius * Math.cos(rad);
