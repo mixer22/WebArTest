@@ -145,38 +145,7 @@
 </head>
 <body>
 <div class="container">
-  <h1>Таблица истинности</h1>
-  <div class="scheme">
-    <svg viewBox="0 0 400 240">
-      <g id="venn">
-        <!-- Круг A -->
-        <circle class="venn-circle" cx="160" cy="120" r="80"/>
-        <text class="label" x="120" y="125">A</text>
-
-        <!-- Круг B -->
-        <circle class="venn-circle" cx="240" cy="100" r="80"/>
-        <text class="label" x="220" y="105">B</text>
-
-        <!-- Круг C -->
-        <circle class="venn-circle" cx="240" cy="160" r="80"/>
-        <text class="label" x="220" y="165">C</text>
-
-        <!-- Заштриховка (A ∩ B) ∪ C -->
-
-        <!-- Пересечение A и B (линза) -->
-        <path class="shade" d="
-          M 160,120
-          A 80,80 0 0 1 240,120
-          A 80,80 0 0 1 160,120
-          Z
-        "/>
-
-        <!-- Полный круг C (включая пересечения) -->
-        <circle class="shade" cx="240" cy="160" r="80"/>
-      </g>
-    </svg>
-  </div>
-
+  <h1>Заполните таблицу истинности данного логического выражения:</h1>
   <table class="truth-table">
     <thead>
       <tr>
