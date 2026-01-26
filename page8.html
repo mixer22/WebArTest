@@ -39,7 +39,7 @@
     }
     .scheme svg {
       width: 300px;
-      height: 220px;  /* чуть выше, чтобы круги поместились комфортно */
+      height: 220px;
     }
     .venn-circle {
       fill: none;
@@ -53,10 +53,9 @@
       fill: #94a3b8;
     }
     .shade {
-      fill: #60a5fa44;  /* полупрозрачный синий для заштриховки */
+      fill: #60a5fa44;
       stroke: none;
     }
-    /* остальной стиль таблицы, лампы и т.д. без изменений */
     .truth-table {
       border-collapse: collapse;
       font-size: 1.3rem;
@@ -137,25 +136,6 @@
       opacity: 1;
       transform: translateY(0);
     }
-    button {
-      margin-top: 12px;
-      padding: 10px 28px;
-      font-size: 1.05rem;
-      font-weight: 600;
-      color: white;
-      background: #3b82f6;
-      border: none;
-      border-radius: 12px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    button:hover {
-      background: #60a5fa;
-      transform: translateY(-2px);
-    }
-    button:active {
-      transform: translateY(0);
-    }
     .footer {
       margin-top: 28px;
       font-size: 13px;
@@ -168,30 +148,31 @@
   <h1>Таблица истинности</h1>
   <div class="scheme">
     <svg viewBox="0 0 400 240">
-      <!-- Круги Венна -->
       <g id="venn">
-        <!-- Круг A (левый) -->
-        <circle class="venn-circle" cx="140" cy="120" r="80"/>
-        <text class="label" x="100" y="125">A</text>
+        <!-- Круг A -->
+        <circle class="venn-circle" cx="160" cy="120" r="80"/>
+        <text class="label" x="120" y="125">A</text>
 
-        <!-- Круг B (правый верхний) -->
-        <circle class="venn-circle" cx="260" cy="90" r="80"/>
-        <text class="label" x="240" y="95">B</text>
+        <!-- Круг B -->
+        <circle class="venn-circle" cx="240" cy="100" r="80"/>
+        <text class="label" x="220" y="105">B</text>
 
-        <!-- Круг C (правый нижний) -->
-        <circle class="venn-circle" cx="260" cy="170" r="80"/>
-        <text class="label" x="240" y="175">C</text>
+        <!-- Круг C -->
+        <circle class="venn-circle" cx="240" cy="160" r="80"/>
+        <text class="label" x="220" y="165">C</text>
 
-        <!-- Заштриховка: (A ∩ B) ∪ C -->
-        <!-- 1. Пересечение A и B -->
+        <!-- Заштриховка (A ∩ B) ∪ C -->
+
+        <!-- Пересечение A и B (линза) -->
         <path class="shade" d="
-          M 140,120
-          A 80,80 0 0 1 220,120
-          A 80,80 0 0 1 140,120
+          M 160,120
+          A 80,80 0 0 1 240,120
+          A 80,80 0 0 1 160,120
           Z
         "/>
-        <!-- 2. Весь круг C (покрывает и пересечения с A/B) -->
-        <circle class="shade" cx="260" cy="170" r="80"/>
+
+        <!-- Полный круг C (включая пересечения) -->
+        <circle class="shade" cx="240" cy="160" r="80"/>
       </g>
     </svg>
   </div>
@@ -217,35 +198,33 @@
     </tbody>
   </table>
 
-  <button id="checkBtn">Проверить ответы</button>
-
   <div class="lamp" id="lamp"></div>
   <div class="answer" id="answer">ЛОГИКА</div>
   <div class="footer">· РОБОСИБ · 2026</div>
 </div>
 
 <script>
-  // скрипт остаётся без изменений (твой актуальный)
   const cells = document.querySelectorAll('.cell');
-  const checkBtn = document.getElementById('checkBtn');
   const lamp = document.getElementById('lamp');
   const answer = document.getElementById('answer');
 
-  cells.forEach(cell => {
-    cell.addEventListener('click', () => {
-      let current = cell.textContent.trim();
-      cell.textContent = (current === '0') ? '1' : '0';
-      cell.classList.remove('checked', 'correct', 'wrong');
-    });
-  });
+  function isAllFilled() {
+    for (let cell of cells) {
+      if (cell.textContent.trim() === '?') return false;
+    }
+    return true;
+  }
 
-  checkBtn.addEventListener('click', () => {
+  function validate() {
     let correctCount = 0;
+
     cells.forEach(cell => {
       const value = cell.textContent.trim();
       const expected = cell.dataset.expected;
-      cell.classList.remove('correct', 'wrong');
+
+      cell.classList.remove('checked', 'correct', 'wrong');
       cell.classList.add('checked');
+
       if (value === expected) {
         cell.classList.add('correct');
         correctCount++;
@@ -253,13 +232,26 @@
         cell.classList.add('wrong');
       }
     });
+
     if (correctCount === cells.length) {
       lamp.classList.add('on');
       answer.classList.add('show');
-      checkBtn.textContent = "Отлично! Всё верно ✓";
-      checkBtn.style.background = '#10b981';
-      checkBtn.disabled = true;
     }
+  }
+
+  cells.forEach(cell => {
+    cell.addEventListener('click', () => {
+      let current = cell.textContent.trim();
+      cell.textContent = (current === '?' || current === '1') ? '0' : '1';
+
+      // снимаем старую подсветку при изменении
+      cell.classList.remove('checked', 'correct', 'wrong');
+
+      // если теперь всё заполнено — проверяем
+      if (isAllFilled()) {
+        validate();
+      }
+    });
   });
 </script>
 </body>
