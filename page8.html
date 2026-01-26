@@ -19,8 +19,8 @@
       position: relative;
     }
     h1 {
-      margin-bottom: 20px;
-      font-size: 2.3rem;
+      margin-bottom: 16px;
+      font-size: 2.2rem;
       text-shadow: 0 0 16px #60a5fa88;
     }
     .container {
@@ -28,7 +28,7 @@
       backdrop-filter: blur(10px);
       border: 1px solid rgba(96,165,250,0.3);
       border-radius: 20px;
-      padding: 20px 24px;
+      padding: 16px 24px;
       box-shadow: 0 20px 60px rgba(0,0,0,0.65);
       max-width: 540px;
       width: 94%;
@@ -38,9 +38,25 @@
       margin: 0 auto 20px;
     }
     .scheme svg {
-      width: 320px;
-      height: 160px;
+      width: 300px;
+      height: 220px;  /* чуть выше, чтобы круги поместились комфортно */
     }
+    .venn-circle {
+      fill: none;
+      stroke: #60a5fa;
+      stroke-width: 4;
+      opacity: 0.9;
+    }
+    .label {
+      font-size: 28px;
+      font-weight: bold;
+      fill: #94a3b8;
+    }
+    .shade {
+      fill: #60a5fa44;  /* полупрозрачный синий для заштриховки */
+      stroke: none;
+    }
+    /* остальной стиль таблицы, лампы и т.д. без изменений */
     .truth-table {
       border-collapse: collapse;
       font-size: 1.3rem;
@@ -90,9 +106,9 @@
       40% { opacity: 0.3; }
     }
     .lamp {
-      width: 80px;
-      height: 80px;
-      margin: 24px auto 12px;
+      width: 78px;
+      height: 78px;
+      margin: 16px auto 0;
       background: radial-gradient(circle at 30% 30%, #111827, #000);
       border-radius: 50%;
       box-shadow: inset 0 0 35px #000;
@@ -100,16 +116,16 @@
     }
     .lamp.on {
       background: radial-gradient(circle at 30% 30%, #fefcbf, #fbbf24 40%, #f59e0b);
-      box-shadow: 0 0 80px 40px #fbbf2488, inset 0 0 50px #fefcbf;
-      animation: glowLamp 2s ease-in-out infinite alternate;
+      box-shadow: 0 0 70px 35px #fbbf2488, inset 0 0 45px #fefcbf;
+      animation: glowLamp 2.2s ease-in-out infinite alternate;
     }
     @keyframes glowLamp {
-      0% { box-shadow: 0 0 80px 40px #fbbf2488; }
-      100% { box-shadow: 0 0 140px 70px #fbbf24cc; }
+      0% { box-shadow: 0 0 70px 35px #fbbf2488; }
+      100% { box-shadow: 0 0 120px 60px #fbbf24cc; }
     }
     .answer {
-      margin-top: 16px;
-      font-size: 2.8rem;
+      margin-top: 20px;
+      font-size: 2.7rem;
       font-weight: 900;
       color: #34d399;
       text-shadow: 0 0 35px #34d399, 0 0 70px #059669;
@@ -119,6 +135,25 @@
     }
     .answer.show {
       opacity: 1;
+      transform: translateY(0);
+    }
+    button {
+      margin-top: 12px;
+      padding: 10px 28px;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: white;
+      background: #3b82f6;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    button:hover {
+      background: #60a5fa;
+      transform: translateY(-2px);
+    }
+    button:active {
       transform: translateY(0);
     }
     .footer {
@@ -132,18 +167,32 @@
 <div class="container">
   <h1>Таблица истинности</h1>
   <div class="scheme">
-    <svg viewBox="0 0 340 160">
-      <text x="25" y="45" font-size="24" fill="#94a3b8">A</text>
-      <text x="25" y="85" font-size="24" fill="#94a3b8">B</text>
-      <text x="25" y="125" font-size="24" fill="#94a3b8">C</text>
-      <line x1="60" y1="40" x2="130" y2="40" stroke="#60a5fa" stroke-width="5"/>
-      <line x1="60" y1="80" x2="130" y2="80" stroke="#60a5fa" stroke-width="5"/>
-      <line x1="60" y1="120" x2="130" y2="120" stroke="#60a5fa" stroke-width="5"/>
-      <circle cx="190" cy="80" r="48" fill="none" stroke="#60a5fa" stroke-width="6"/>
-      <circle cx="212" cy="80" r="32" fill="none" stroke="#60a5fa" stroke-width="6"/>
-      <text x="168" y="92" font-size="28" fill="#60a5fa" font-weight="bold">NAND</text>
-      <line x1="244" y1="80" x2="310" y2="80" stroke="#60a5fa" stroke-width="5"/>
-      <text x="320" y="88" font-size="24" fill="#94a3b8">Y</text>
+    <svg viewBox="0 0 400 240">
+      <!-- Круги Венна -->
+      <g id="venn">
+        <!-- Круг A (левый) -->
+        <circle class="venn-circle" cx="140" cy="120" r="80"/>
+        <text class="label" x="100" y="125">A</text>
+
+        <!-- Круг B (правый верхний) -->
+        <circle class="venn-circle" cx="260" cy="90" r="80"/>
+        <text class="label" x="240" y="95">B</text>
+
+        <!-- Круг C (правый нижний) -->
+        <circle class="venn-circle" cx="260" cy="170" r="80"/>
+        <text class="label" x="240" y="175">C</text>
+
+        <!-- Заштриховка: (A ∩ B) ∪ C -->
+        <!-- 1. Пересечение A и B -->
+        <path class="shade" d="
+          M 140,120
+          A 80,80 0 0 1 220,120
+          A 80,80 0 0 1 140,120
+          Z
+        "/>
+        <!-- 2. Весь круг C (покрывает и пересечения с A/B) -->
+        <circle class="shade" cx="260" cy="170" r="80"/>
+      </g>
     </svg>
   </div>
 
@@ -168,38 +217,35 @@
     </tbody>
   </table>
 
+  <button id="checkBtn">Проверить ответы</button>
+
   <div class="lamp" id="lamp"></div>
-  <div class="answer" id="answer">ЭВРИКА!</div>
+  <div class="answer" id="answer">ЛОГИКА</div>
   <div class="footer">· РОБОСИБ · 2026</div>
 </div>
 
 <script>
+  // скрипт остаётся без изменений (твой актуальный)
   const cells = document.querySelectorAll('.cell');
+  const checkBtn = document.getElementById('checkBtn');
   const lamp = document.getElementById('lamp');
   const answer = document.getElementById('answer');
 
-  function checkIfAllFilledAndValidate() {
-    let allFilled = true;
-    let correctCount = 0;
-
-    cells.forEach(cell => {
-      const value = cell.textContent.trim();
-      if (value === '?') {
-        allFilled = false;
-        return;
-      }
+  cells.forEach(cell => {
+    cell.addEventListener('click', () => {
+      let current = cell.textContent.trim();
+      cell.textContent = (current === '0') ? '1' : '0';
+      cell.classList.remove('checked', 'correct', 'wrong');
     });
+  });
 
-    if (!allFilled) return;
-
-    // Все заполнены → проверяем
+  checkBtn.addEventListener('click', () => {
+    let correctCount = 0;
     cells.forEach(cell => {
       const value = cell.textContent.trim();
       const expected = cell.dataset.expected;
-
-      cell.classList.remove('checked', 'correct', 'wrong');
+      cell.classList.remove('correct', 'wrong');
       cell.classList.add('checked');
-
       if (value === expected) {
         cell.classList.add('correct');
         correctCount++;
@@ -207,29 +253,13 @@
         cell.classList.add('wrong');
       }
     });
-
     if (correctCount === cells.length) {
       lamp.classList.add('on');
-      answer.textContent = "ЭВРИКА!";
       answer.classList.add('show');
+      checkBtn.textContent = "Отлично! Всё верно ✓";
+      checkBtn.style.background = '#10b981';
+      checkBtn.disabled = true;
     }
-  }
-
-  cells.forEach(cell => {
-    cell.addEventListener('click', () => {
-      let current = cell.textContent.trim();
-      if (current === '?') {
-        cell.textContent = '0';
-      } else {
-        cell.textContent = current === '0' ? '1' : '0';
-      }
-
-      // Сбрасываем старую подсветку при изменении
-      cell.classList.remove('checked', 'correct', 'wrong');
-
-      // Проверяем, не заполнил ли пользователь всё
-      checkIfAllFilledAndValidate();
-    });
   });
 </script>
 </body>
