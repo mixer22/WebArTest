@@ -1,239 +1,286 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <title>Гидроэлектростанция</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Станция — Собери цепь питания</title>
   <style>
     body {
       margin: 0;
       height: 100dvh;
       overflow: hidden;
-      font-family: system-ui, -apple-system, sans-serif;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
       background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
       color: #e5e7eb;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      position: relative;
+      padding: 20px;
+      box-sizing: border-box;
     }
 
     h1 {
-      margin-bottom: 20px;
-      font-size: 2.2rem;
-      text-shadow: 0 0 15px #60a5fa88;
-      z-index: 3;
+      margin: 20px 0 30px;
+      font-size: clamp(1.8rem, 5vw, 2.4rem);
+      text-shadow: 0 0 20px #60a5fa88;
+      text-align: center;
     }
-     .footer {
-            margin-top: 32px;
-            font-size: 13px;
-            opacity: 0.7;
-            text-align: center;
-        }
 
-    .scene {
-      position: relative;
-      width: 320px;
-      height: 420px;
-      background: #111827;
+    .container {
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(96,165,250,0.3);
       border-radius: 24px;
-      overflow: hidden;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.7);
-      z-index: 2;
-    }
-
-    /* Водохранилище */
-    .reservoir {
-      position: absolute;
-      top: 0;
-      left: 0;
+      padding: 30px;
       width: 100%;
-      height: 50%;
-      background: linear-gradient(to bottom, #60a5fa, #3b82f6);
-      transition: height 0.6s ease-out;
+      max-width: 600px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+      position: relative;
       overflow: hidden;
     }
 
-    .water-surface {
+    .target-chain {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 16px;
+      min-height: 140px;
+      padding: 20px;
+      border: 2px dashed rgba(96,165,250,0.4);
+      border-radius: 16px;
+      margin-bottom: 30px;
+      background: rgba(30,41,59,0.3);
+    }
+
+    .slot {
+      width: 110px;
+      height: 110px;
+      border: 2px solid rgba(96,165,250,0.3);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(15,23,42,0.5);
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .slot.filled {
+      border-color: #60a5fa;
+      background: rgba(96,165,250,0.12);
+      box-shadow: 0 0 20px rgba(96,165,250,0.3);
+    }
+
+    .slot::after {
+      content: attr(data-order);
       position: absolute;
-      bottom: 0;
-      width: 100%;
-      height: 40px;
-      background: linear-gradient(to bottom, rgba(255,255,255,0.3), transparent);
-      animation: wave 6s infinite linear;
+      top: -12px;
+      right: -12px;
+      background: #1e293b;
+      color: #94a3b8;
+      font-size: 0.9rem;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #475569;
     }
 
-    @keyframes wave {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(-100px); }
+    .components {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 16px;
+      margin-bottom: 40px;
     }
 
-    /* Плотина */
-    .dam {
+    .component {
+      width: 100px;
+      height: 100px;
+      background: rgba(30,41,59,0.6);
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: grab;
+      user-select: none;
+      transition: all 0.25s ease;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+      font-size: 2.2rem;
+    }
+
+    .component:active {
+      cursor: grabbing;
+      transform: scale(1.08);
+      box-shadow: 0 12px 30px rgba(96,165,250,0.4);
+    }
+
+    .component-name {
+      font-size: 0.9rem;
+      margin-top: 8px;
+      color: #94a3b8;
+      text-align: center;
+    }
+
+    .success-line {
       position: absolute;
       top: 50%;
       left: 0;
       width: 100%;
-      height: 20px;
-      background: #4b5563;
-      z-index: 2;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+      height: 4px;
+      background: linear-gradient(90deg, transparent, #34d399, #10b981, #34d399, transparent);
+      transform: translateY(-50%);
+      opacity: 0;
+      transition: opacity 1.5s;
+      box-shadow: 0 0 30px #34d399;
+      pointer-events: none;
     }
 
-    /* Турбина */
-    .turbine {
-      position: absolute;
-      top: 52%;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 80px;
-      height: 80px;
-      z-index: 3;
+    .success-line.active {
+      opacity: 0.8;
+      animation: flow 3s linear infinite;
     }
 
-    .turbine svg {
-      width: 100%;
-      height: 100%;
-      animation: spin 0s linear infinite;
-      transform-origin: center;
-    }
-
-    body.charging .turbine svg {
-      animation-duration: 1.2s;
-    }
-
-    @keyframes spin {
-      from { transform: rotate(0deg); }
-      to   { transform: rotate(360deg); }
-    }
-
-    /* Индикатор энергии */
-    .energy-bar {
-      position: absolute;
-      bottom: 40px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 240px;
-      height: 30px;
-      background: #1e293b;
-      border: 3px solid #60a5fa;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 0 20px rgba(96,165,250,0.3);
-    }
-
-    .energy-fill {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(to right, #34d399, #10b981);
-      transition: width 0.4s ease-out;
-      box-shadow: 0 0 15px #34d399 inset;
+    @keyframes flow {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
     }
 
     .answer {
       margin-top: 40px;
-      font-size: 3rem;
+      font-size: 3.5rem;
       font-weight: 900;
       color: #34d399;
-      text-shadow: 0 0 30px #34d399, 0 0 60px #059669;
+      text-shadow: 0 0 40px #34d399, 0 0 80px #059669;
       opacity: 0;
-      transform: translateY(30px);
-      transition: all 1.2s ease;
+      transform: translateY(40px);
+      transition: all 1.5s ease;
     }
 
     .answer.show {
       opacity: 1;
       transform: translateY(0);
+      animation: pulseText 2.5s ease-in-out infinite alternate;
+    }
+
+    @keyframes pulseText {
+      0% { text-shadow: 0 0 30px #34d399; }
+      100% { text-shadow: 0 0 60px #34d399, 0 0 100px #059669; }
     }
   </style>
 </head>
 <body>
 
-<h1>⚡ Заполни водохранилище!</h1>
+<h1>Собери цепь питания</h1>
 
-<div class="scene">
-  <div class="reservoir" id="reservoir">
-    <div class="water-surface"></div>
-  </div>
-  <div class="dam"></div>
-
-  <div class="turbine">
-    <svg viewBox="0 0 100 100">
-      <g id="turbineBlades">
-        <path d="M50,50 L30,20 Q25,15 20,25 L40,50 Z" fill="#60a5fa" stroke="#3b82f6" stroke-width="2"/>
-        <path d="M50,50 L80,30 Q85,25 75,20 L50,40 Z" fill="#60a5fa" stroke="#3b82f6" stroke-width="2" transform="rotate(120 50 50)"/>
-        <path d="M50,50 L70,80 Q75,85 80,75 L50,60 Z" fill="#60a5fa" stroke="#3b82f6" stroke-width="2" transform="rotate(240 50 50)"/>
-        <circle cx="50" cy="50" r="12" fill="#1e293b" stroke="#60a5fa" stroke-width="3"/>
-      </g>
-    </svg>
+<div class="container">
+  <div class="target-chain" id="targetChain">
+    <div class="slot" data-order="1" data-expected="panel"></div>
+    <div class="slot" data-order="2" data-expected="controller"></div>
+    <div class="slot" data-order="3" data-expected="battery"></div>
+    <div class="slot" data-order="4" data-expected="inverter"></div>
+    <div class="slot" data-order="5" data-expected="load"></div>
   </div>
 
-  <div class="energy-bar">
-    <div class="energy-fill" id="energyFill"></div>
+  <div class="success-line" id="successLine"></div>
+
+  <div class="components" id="components">
+    <div class="component" draggable="true" data-type="load">
+      <span>🏠</span>
+      <div class="component-name">Нагрузка</div>
+    </div>
+    <div class="component" draggable="true" data-type="battery">
+      <span>🔋</span>
+      <div class="component-name">Аккумулятор</div>
+    </div>
+    <div class="component" draggable="true" data-type="inverter">
+      <span>⚡</span>
+      <div class="component-name">Инвертор</div>
+    </div>
+    <div class="component" draggable="true" data-type="controller">
+      <span>🎛️</span>
+      <div class="component-name">Контроллер</div>
+    </div>
+    <div class="component" draggable="true" data-type="panel">
+      <span>☀️</span>
+      <div class="component-name">Солнечная панель</div>
+    </div>
   </div>
+
+  <div class="answer" id="answer">ЦЕПЬ</div>
 </div>
 
-<div class="answer" id="answer">ТУРБИНА</div>
-<div class="footer">· РОБОСИБ · 2026</div>
 <script>
-  const reservoir = document.getElementById('reservoir');
-  const energyFill = document.getElementById('energyFill');
+  const components = document.querySelectorAll('.component');
+  const slots = document.querySelectorAll('.slot');
+  const successLine = document.getElementById('successLine');
   const answer = document.getElementById('answer');
-  const turbine = document.querySelector('.turbine svg');
 
-  let waterLevel = 30; // начальный уровень воды в %
-  let energy = 0;
+  // Правильный порядок типов
+  const correctOrder = ['panel', 'controller', 'battery', 'inverter', 'load'];
 
-  reservoir.style.height = waterLevel + '%';
+  components.forEach(comp => {
+    comp.addEventListener('dragstart', e => {
+      e.dataTransfer.setData('text/plain', comp.dataset.type);
+      comp.style.opacity = '0.6';
+    });
 
-  function updateWater(delta) {
-    waterLevel = Math.max(0, Math.min(100, waterLevel + delta));
-    reservoir.style.height = waterLevel + '%';
+    comp.addEventListener('dragend', () => {
+      comp.style.opacity = '1';
+    });
+  });
 
-    // Чем выше вода — тем быстрее заряд
-    if (waterLevel > 60) {
-      energy += (waterLevel - 60) * 0.08;
-      if (energy > 100) energy = 100;
-      energyFill.style.width = energy + '%';
+  slots.forEach(slot => {
+    slot.addEventListener('dragover', e => {
+      e.preventDefault();
+      slot.style.background = 'rgba(96,165,250,0.2)';
+    });
 
-      document.body.classList.add('charging');
-      if (energy >= 100) {
-        answer.classList.add('show');
+    slot.addEventListener('dragleave', () => {
+      slot.style.background = 'rgba(15,23,42,0.5)';
+    });
+
+    slot.addEventListener('drop', e => {
+      e.preventDefault();
+      const type = e.dataTransfer.getData('text/plain');
+      const existing = slot.querySelector('.component');
+
+      if (existing) {
+        // Возвращаем старый элемент в общий пул
+        document.getElementById('components').appendChild(existing);
       }
+
+      const dragged = document.querySelector(`[data-type="${type}"]`);
+      slot.innerHTML = '';
+      slot.appendChild(dragged);
+      slot.style.background = 'rgba(15,23,42,0.5)';
+      dragged.style.opacity = '1';
+
+      checkChain();
+    });
+  });
+
+  function checkChain() {
+    const filledSlots = Array.from(slots).map(slot => {
+      const comp = slot.querySelector('.component');
+      return comp ? comp.dataset.type : null;
+    });
+
+    const isCorrect = filledSlots.every((type, i) => type === correctOrder[i]);
+
+    if (isCorrect) {
+      successLine.classList.add('active');
+      answer.classList.add('show');
     } else {
-      document.body.classList.remove('charging');
+      successLine.classList.remove('active');
     }
   }
 
-  // Перетаскивание по вертикали
-  let isDragging = false;
-  let startY = 0;
-
-  function start(e) {
-    isDragging = true;
-    startY = e.touches ? e.touches[0].clientY : e.clientY;
-    e.preventDefault();
-  }
-
-  function move(e) {
-    if (!isDragging) return;
-    const y = e.touches ? e.touches[0].clientY : e.clientY;
-    const delta = (startY - y) * 0.3; // вверх — поднимаем воду
-    updateWater(delta);
-    startY = y;
-  }
-
-  function end() {
-    isDragging = false;
-  }
-
-  document.addEventListener('mousedown', start);
-  document.addEventListener('touchstart', start);
-  document.addEventListener('mousemove', move);
-  document.addEventListener('touchmove', move, { passive: false });
-  document.addEventListener('mouseup', end);
-  document.addEventListener('touchend', end);
+  // Инициализация (можно раскомментировать для автотеста)
+  // checkChain();
 </script>
 </body>
 </html>
