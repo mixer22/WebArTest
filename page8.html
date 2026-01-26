@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Логическая станция — 3-входовой NAND</title>
+  <title>Таблица истинности</title>
   <style>
     body {
       margin: 0;
@@ -134,7 +134,7 @@
 </head>
 <body>
 <div class="container">
-  <h1>Логическая станция — 3-входовой NAND</h1>
+  <h1>Таблица истинности</h1>
   <div class="scheme">
     <svg viewBox="0 0 340 160">
       <!-- Входы -->
@@ -163,18 +163,18 @@
         <th>A</th>
         <th>B</th>
         <th>C</th>
-        <th>Y = A NAND B NAND C</th>
+        <th>Y = (A И B) ИЛИ C</th>
       </tr>
     </thead>
     <tbody>
-      <tr><td>0</td><td>0</td><td>0</td><td class="cell" data-expected="1">?</td></tr>
+      <tr><td>0</td><td>0</td><td>0</td><td class="cell" data-expected="0">?</td></tr>
       <tr><td>0</td><td>0</td><td>1</td><td class="cell" data-expected="1">?</td></tr>
-      <tr><td>0</td><td>1</td><td>0</td><td class="cell" data-expected="1">?</td></tr>
+      <tr><td>0</td><td>1</td><td>0</td><td class="cell" data-expected="0">?</td></tr>
       <tr><td>0</td><td>1</td><td>1</td><td class="cell" data-expected="1">?</td></tr>
-      <tr><td>1</td><td>0</td><td>0</td><td class="cell" data-expected="1">?</td></tr>
+      <tr><td>1</td><td>0</td><td>0</td><td class="cell" data-expected="0">?</td></tr>
       <tr><td>1</td><td>0</td><td>1</td><td class="cell" data-expected="1">?</td></tr>
       <tr><td>1</td><td>1</td><td>0</td><td class="cell" data-expected="1">?</td></tr>
-      <tr><td>1</td><td>1</td><td>1</td><td class="cell" data-expected="0">?</td></tr>
+      <tr><td>1</td><td>1</td><td>1</td><td class="cell" data-expected="1">?</td></tr>
     </tbody>
   </table>
 
