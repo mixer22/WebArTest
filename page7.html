@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Станция — Собери цепь питания</title>
+  <title>Цепь питания</title>
   <style>
     body {
       margin: 0;
@@ -174,7 +174,7 @@
 </head>
 <body>
 
-<h1>Собери цепь питания</h1>
+<h1>Собери минимально рабочую цепь питания</h1>
 
 <div class="container">
   <div class="target-chain" id="targetChain">
@@ -190,7 +190,7 @@
   <div class="components" id="components">
     <div class="component" draggable="true" data-type="load">
       <span>🏠</span>
-      <div class="component-name">Нагрузка</div>
+      <div class="component-name">Бытовые приборы</div>
     </div>
     <div class="component" draggable="true" data-type="battery">
       <span>🔋</span>
@@ -198,15 +198,23 @@
     </div>
     <div class="component" draggable="true" data-type="inverter">
       <span>⚡</span>
-      <div class="component-name">Инвертор</div>
+      <div class="component-name">Инвертор (преобразователь)</div>
     </div>
     <div class="component" draggable="true" data-type="controller">
       <span>🎛️</span>
-      <div class="component-name">Контроллер</div>
+      <div class="component-name">Контроллер заряда</div>
     </div>
     <div class="component" draggable="true" data-type="panel">
       <span>☀️</span>
       <div class="component-name">Солнечная панель</div>
+    </div>
+    <div class="component" draggable="true" data-type="pred">
+      <span>🔌</span>
+      <div class="component-name">Предохранитель</div>
+    </div>
+    <div class="component" draggable="true" data-type="pred">
+      <span>📊</span>
+      <div class="component-name">Счётчик энергии</div>
     </div>
   </div>
 
@@ -278,9 +286,6 @@
       successLine.classList.remove('active');
     }
   }
-
-  // Инициализация (можно раскомментировать для автотеста)
-  // checkChain();
 </script>
 </body>
 </html>
