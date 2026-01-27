@@ -18,135 +18,115 @@
       justify-content: center;
       position: relative;
     }
-
     h1 {
-      margin-bottom: 20px;
-      font-size: 2.2rem;
+      margin-bottom: 12px;          /* было 20px */
+      font-size: 1.9rem;            /* было 2.2rem */
       text-shadow: 0 0 15px #60a5fa88;
     }
-
     .footer {
-            margin-top: 32px;
-            font-size: 13px;
-            opacity: 0.7;
-            text-align: center;
-        }
-
+      margin-top: 20px;             /* было 32px */
+      font-size: 12px;
+      opacity: 0.7;
+      text-align: center;
+    }
     .container {
       background: rgba(15, 23, 42, 0.7);
       backdrop-filter: blur(10px);
       border: 1px solid rgba(96,165,250,0.25);
       border-radius: 20px;
-      padding: 30px;
+      padding: 20px;                /* было 30px */
       box-shadow: 0 20px 60px rgba(0,0,0,0.6);
-      max-width: 580px;
-      width: 90%;
+      max-width: 560px;
+      width: 92%;
       text-align: center;
     }
-
     .limit {
-      font-size: 1.4rem;
-      margin-bottom: 30px;
+      font-size: 1.3rem;            /* было 1.4rem */
+      margin-bottom: 20px;          /* было 30px */
       color: #60a5fa;
       text-shadow: 0 0 10px #60a5fa44;
     }
-
     .current-power {
-      font-size: 1.8rem;
-      margin: 20px 0;
+      font-size: 1.6rem;            /* было 1.8rem */
+      margin: 16px 0;               /* было 20px */
       color: #94a3b8;
     }
-
     .current-power.high {
       color: #f87171;
       animation: pulse 1.5s infinite;
     }
-
     @keyframes pulse {
       0%, 100% { opacity: 1; }
       50% { opacity: 0.6; }
     }
-
     .devices {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      gap: 16px;
-      margin-bottom: 30px;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* было 140px */
+      gap: 12px;                    /* было 16px */
+      margin-bottom: 20px;          /* было 30px */
     }
-
     .device {
       background: #1e293b;
       border: 2px solid #475569;
-      border-radius: 16px;
-      padding: 16px;
+      border-radius: 14px;          /* чуть меньше */
+      padding: 12px;                /* было 16px */
       cursor: pointer;
       transition: all 0.3s ease;
       text-align: center;
       box-shadow: 0 4px 12px rgba(0,0,0,0.4);
       user-select: none;
     }
-
     .device:hover {
       transform: translateY(-4px);
       box-shadow: 0 8px 20px rgba(96,165,250,0.3);
     }
-
     .device.selected {
       border-color: #34d399;
       background: rgba(52,211,153,0.15);
       box-shadow: 0 0 20px rgba(52,211,153,0.4);
     }
-
     .device.exceed {
       border-color: #f87171;
       background: rgba(248,113,113,0.15);
       animation: shake 0.4s;
     }
-
     @keyframes shake {
       0%, 100% { transform: translateX(0); }
       25% { transform: translateX(-6px); }
       75% { transform: translateX(6px); }
     }
-
     .icon {
-      font-size: 2.8rem;
-      margin-bottom: 8px;
+      font-size: 2.4rem;            /* было 2.8rem */
+      margin-bottom: 6px;           /* было 8px */
     }
-
     .name {
-      font-size: 1.1rem;
-      margin-bottom: 4px;
+      font-size: 1rem;              /* было 1.1rem */
+      margin-bottom: 3px;           /* было 4px */
     }
-
     .watts {
-      font-size: 1rem;
+      font-size: 0.9rem;            /* было 1rem */
       color: #94a3b8;
     }
-
     .status {
-      margin-top: 30px;
-      font-size: 1.3rem;
+      margin-top: 20px;             /* было 30px */
+      font-size: 1.2rem;            /* было 1.3rem */
       color: #94a3b8;
     }
-
     .success {
       color: #34d399;
       font-weight: bold;
       text-shadow: 0 0 15px #34d399;
     }
-
     .answer {
-      margin-top: 40px;
-      font-size: 3.5rem;
+      margin-top: 24px;             /* было 40px */
+      font-size: 2.6rem;            /* было 3.5rem — сильно уменьшено */
       font-weight: 900;
       color: #34d399;
-      text-shadow: 0 0 30px #34d399, 0 0 60px #059669;
+      text-shadow: 0 0 25px #34d399, 0 0 50px #059669;
       opacity: 0;
-      transform: translateY(30px);
+      transform: translateY(20px);  /* было 30px */
       transition: all 1.2s ease;
     }
-
     .answer.show {
       opacity: 1;
       transform: translateY(0);
@@ -154,14 +134,10 @@
   </style>
 </head>
 <body>
-
 <div class="container">
   <h1>Экономим энергию!</h1>
-
   <div class="limit">Лимит мощности: <b>200 Вт</b></div>
-
   <div class="current-power" id="currentPower">Текущая мощность: <span id="powerValue">0</span> Вт</div>
-
   <div class="devices" id="devices">
     <div class="device" data-watts="60">
       <div class="icon">💡</div>
@@ -194,34 +170,28 @@
       <div class="watts">30 Вт</div>
     </div>
   </div>
-
   <div class="status" id="status">Выберите приборы, чтобы достигнуть лимита</div>
-
   <div class="answer" id="answer">ЭНЕРГОСБЕРЕЖЕНИЕ</div>
   <div class="footer">· РОБОСИБ · 2026</div>
 </div>
 
 <script>
+  // Скрипт без изменений
   const devices = document.querySelectorAll('.device');
   const powerValue = document.getElementById('powerValue');
   const status = document.getElementById('status');
   const answer = document.getElementById('answer');
   let currentPower = 0;
-
   devices.forEach(device => {
     device.addEventListener('click', () => {
       const watts = parseInt(device.dataset.watts);
       if (device.classList.contains('selected')) {
-        // Отключаем
         device.classList.remove('selected', 'exceed');
         currentPower -= watts;
       } else {
-        // Включаем
         currentPower += watts;
         device.classList.add('selected');
       }
-
-      // Проверка превышения
       if (currentPower > 200) {
         device.classList.add('exceed');
         status.textContent = 'Превышение лимита!';
@@ -231,7 +201,6 @@
         status.style.color = '#94a3b8';
         device.classList.remove('exceed');
       }
-
       powerValue.textContent = currentPower;
       const powerDisplay = document.querySelector('.current-power');
       if (currentPower > 200) {
@@ -239,8 +208,7 @@
       } else {
         powerDisplay.classList.remove('high');
       }
-
-      if (currentPower == 200) { // можно сделать строго = 200
+      if (currentPower == 200) {
         answer.classList.add('show');
         status.textContent = 'Отлично!';
         status.style.color = '#34d399';
