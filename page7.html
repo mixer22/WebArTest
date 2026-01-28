@@ -19,19 +19,8 @@
       box-sizing: border-box;
       touch-action: pan-y;
     }
-    h1 {
-      margin: 12px 0 20px;
-      font-size: clamp(1.7rem, 4.8vw, 2.2rem);
-      text-shadow: 0 0 20px #60a5fa88;
-      text-align: center;
-    }
-  
-    .footer {
-      margin-top: 16px;
-      font-size: 12px;
-      opacity: 0.65;
-    }
-  
+    h1 { margin: 12px 0 20px; font-size: clamp(1.7rem, 4.8vw, 2.2rem); text-shadow: 0 0 20px #60a5fa88; text-align: center; }
+    .footer { margin-top: 16px; font-size: 12px; opacity: 0.65; }
     .container {
       background: rgba(15, 23, 42, 0.75);
       backdrop-filter: blur(12px);
@@ -76,17 +65,14 @@
     .slot::after {
       content: attr(data-order);
       position: absolute;
-      top: -10px;
-      right: -10px;
+      top: -10px; right: -10px;
       background: #1e293b;
       color: #94a3b8;
       font-size: 0.8rem;
-      width: 22px;
-      height: 22px;
+      width: 22px; height: 22px;
       border-radius: 50%;
       display: flex;
-      align-items: center;
-      justify-content: center;
+      align-items: center; justify-content: center;
       border: 1px solid #475569;
     }
     .components {
@@ -115,11 +101,13 @@
       -webkit-user-select: none;
       user-select: none;
     }
-    .component:active,
     .component.dragging {
-      cursor: grabbing;
-      transform: scale(1.08);
-      box-shadow: 0 12px 30px rgba(96,165,250,0.4);
+      position: fixed !important;     /* ← ключевой момент */
+      pointer-events: none;           /* чтобы не мешал событиям под собой */
+      z-index: 9999;
+      opacity: 0.85;
+      transform: scale(1.1);
+      box-shadow: 0 12px 40px rgba(96,165,250,0.6);
     }
     .component-name {
       font-size: 0.75rem;
@@ -130,10 +118,8 @@
     }
     .success-line {
       position: absolute;
-      top: 50%;
-      left: 0;
-      width: 100%;
-      height: 4px;
+      top: 50%; left: 0;
+      width: 100%; height: 4px;
       background: linear-gradient(90deg, transparent, #34d399, #10b981, #34d399, transparent);
       transform: translateY(-50%);
       opacity: 0;
@@ -184,14 +170,8 @@
       animation: holdFill 0.4s linear forwards;
     }
     @keyframes holdFill {
-      0% {
-        border-color: rgba(96,165,250,0.2);
-        transform: scale(0.8);
-      }
-      100% {
-        border-color: #60a5fa;
-        transform: scale(1.15);
-      }
+      0% { border-color: rgba(96,165,250,0.2); transform: scale(0.8); }
+      100% { border-color: #60a5fa; transform: scale(1.15); }
     }
   </style>
 </head>
@@ -250,20 +230,40 @@
   const correctOrder = ['panel', 'battery', 'inverter', 'pred', 'load'];
 
   let dragged = null;
+  let offsetX = 0;
+  let offsetY = 0;
 
-  // ------------------- MOBILE: touch события -------------------
+  // MOBILE: touch
   components.forEach(comp => {
     comp.addEventListener('touchstart', e => {
       if (dragged) return;
       dragged = comp;
+      const rect = comp.getBoundingClientRect();
+      const touch = e.touches[0];
+
+      // Запоминаем смещение от точки касания до центра/угла карточки
+      offsetX = touch.clientX - rect.left - rect.width / 2;
+      offsetY = touch.clientY - rect.top - rect.height / 2;
+
       comp.classList.add('hold-active', 'dragging');
-      comp.style.opacity = '0.6';
-      e.preventDefault(); // предотвращаем скролл и другие дефолтные действия
+      comp.style.opacity = '0.85';
+
+      // Сразу перемещаем в fixed, чтобы следовал за пальцем
+      comp.style.left = `${rect.left + window.scrollX}px`;
+      comp.style.top  = `${rect.top + window.scrollY}px`;
+      comp.style.width = `${rect.width}px`;
+      comp.style.height = `${rect.height}px`;
+
+      e.preventDefault();
     }, { passive: false });
 
     comp.addEventListener('touchmove', e => {
       if (!dragged) return;
       e.preventDefault();
+
+      const touch = e.touches[0];
+      dragged.style.left = `${touch.clientX - offsetX - dragged.offsetWidth / 2}px`;
+      dragged.style.top  = `${touch.clientY - offsetY - dragged.offsetHeight / 2}px`;
     }, { passive: false });
 
     comp.addEventListener('touchend', e => {
@@ -273,11 +273,10 @@
       dragged.style.opacity = '1';
 
       const touch = e.changedTouches[0];
-      const elementUnder = document.elementFromPoint(touch.clientX, touch.clientY);
-      const targetSlot = elementUnder?.closest('.slot');
+      const elemUnder = document.elementFromPoint(touch.clientX, touch.clientY);
+      const targetSlot = elemUnder?.closest('.slot');
 
       if (targetSlot) {
-        // логика перемещения
         const existing = targetSlot.querySelector('.component');
         if (existing) {
           document.getElementById('components').appendChild(existing);
@@ -285,20 +284,31 @@
         targetSlot.innerHTML = '';
         targetSlot.appendChild(dragged);
         targetSlot.style.background = 'rgba(15,23,42,0.5)';
+        // Сбрасываем inline-стили после дропа
+        dragged.style.left = '';
+        dragged.style.top = '';
+        dragged.style.width = '';
+        dragged.style.height = '';
         checkChain();
+      } else {
+        // Если отпустили не над слотом — возвращаем обратно
+        dragged.style.left = '';
+        dragged.style.top = '';
+        dragged.style.width = '';
+        dragged.style.height = '';
       }
 
       dragged = null;
-    });
+    }, { passive: false });
   });
 
-  // ------------------- DESKTOP: оставляем нативный drag & drop -------------------
+  // DESKTOP: mouse (оставляем почти как было)
   components.forEach(comp => {
     comp.addEventListener('dragstart', e => {
       dragged = comp;
       e.dataTransfer.setData('text/plain', comp.dataset.type);
-      comp.style.opacity = '0.6';
       comp.classList.add('dragging');
+      comp.style.opacity = '0.6';
     });
 
     comp.addEventListener('dragend', () => {
