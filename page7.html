@@ -241,7 +241,7 @@
   <div class="answer" id="answer">ЦЕПЬ</div>
   <div class="footer">· РОБОСИБ · 2026</div>
 </div>
-<script src="https://cdn.jsdelivr.net/gh/rozek/dragdroptouch-bug-fixed@master/dragdroptouch.js"></script>
+<script src="https://unpkg.com/mobile-drag-drop@latest/lib/index.min.js"></script>
 <script>
   // скрипт без изменений
   const components = document.querySelectorAll('.component');
@@ -306,6 +306,15 @@
       comp.classList.remove('hold-active');
     });
   });
+
+  // Активируем полифилл явно (важно!)
+if (window.MobileDragDrop && window.MobileDragDrop.polyfill) {
+  window.MobileDragDrop.polyfill({
+    forceApply: true,           // заставляет работать даже если браузер "думает", что поддерживает
+    holdToDrag: 100,           // если хочешь 0 задержки (но может конфликтовать со скроллом)
+    // или holdToDrag: 150      — компромисс 150 мс
+  });
+}
   
   function checkChain() {
     const filledSlots = Array.from(slots).map(slot => {
