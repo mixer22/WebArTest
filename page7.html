@@ -266,6 +266,12 @@
     <div class="slot" data-order="4" data-expected="pred"></div>
     <div class="slot" data-order="5" data-expected="load"></div>
   </div>
+  <div class="mobile-hint" id="mobileHint">
+  <div class="hint-content">
+    <span class="hint-icon">👆</span>
+    <span class="hint-text">Удерживайте элемент пальцем, чтобы перетащить</span>
+    <button class="hint-close" id="hintClose">×</button>
+  </div>
   <div class="success-line" id="successLine"></div>
   <div class="components" id="components">
     <div class="component" draggable="true" data-type="load">
@@ -407,12 +413,6 @@ if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
   });
 }
 </script><!-- Всплывающая подсказка для мобильных -->
-<div class="mobile-hint" id="mobileHint">
-  <div class="hint-content">
-    <span class="hint-icon">👆</span>
-    <span class="hint-text">Удерживайте элемент пальцем, чтобы перетащить</span>
-    <button class="hint-close" id="hintClose">×</button>
-  </div>
 </div>
 </body>
 </html>
