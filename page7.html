@@ -111,6 +111,9 @@
       box-shadow: 0 6px 16px rgba(0,0,0,0.4);
       font-size: 1.9rem;            /* было 2.2rem */
       touch-action: manipulation;
+      position: relative;               /* важно! */
+      -webkit-user-select: none;
+      user-select: none;
     }
     .component:active {
       cursor: grabbing;
@@ -161,10 +164,35 @@
       transform: translateY(0);
       animation: pulseText 2.5s ease-in-out infinite alternate;
     }
+    .hold-progress {
+      position: absolute;
+      inset: -6px;                      /* чуть больше карточки */
+      border: 3px solid rgba(96,165,250,0.0);  /* прозрачный по умолчанию */
+      border-radius: 50%;
+      pointer-events: none;
+      transition: border-color 0.1s;
+      box-sizing: border-box;
+      opacity: 0;
+      transform: scale(0.8);
+    }
+    .component.hold-active .hold-progress {
+      opacity: 1;
+      animation: holdFill 0.3s linear forwards;  /* 600 мс — подстрой под реальную задержку */
+    }
     @keyframes pulseText {
       0% { text-shadow: 0 0 30px #34d399; }
       100% { text-shadow: 0 0 60px #34d399, 0 0 100px #059669; }
     }
+    @keyframes holdFill {
+    0% {
+      border-color: rgba(96,165,250,0.2);
+      transform: scale(0.8);
+    }
+    100% {
+      border-color: #60a5fa;
+      transform: scale(1.15);
+    }
+  }
   </style>
 </head>
 <body>
@@ -180,26 +208,32 @@
   <div class="success-line" id="successLine"></div>
   <div class="components" id="components">
     <div class="component" draggable="true" data-type="load">
+      <div class="hold-progress"></div>  <!-- новый круг -->
       <span>🏠</span>
       <div class="component-name">Бытовые приборы</div>
     </div>
     <div class="component" draggable="true" data-type="battery">
+      <div class="hold-progress"></div>  <!-- новый круг -->
       <span>🔋</span>
       <div class="component-name">Аккумулятор</div>
     </div>
     <div class="component" draggable="true" data-type="inverter">
+      <div class="hold-progress"></div>  <!-- новый круг -->
       <span>⚡</span>
       <div class="component-name">Преобразователь тока</div>
     </div>
     <div class="component" draggable="true" data-type="panel">
+      <div class="hold-progress"></div>  <!-- новый круг -->
       <span>☀️</span>
       <div class="component-name">Солнечная панель</div>
     </div>
     <div class="component" draggable="true" data-type="pred">
+      <div class="hold-progress"></div>  <!-- новый круг -->
       <span>🔌</span>
       <div class="component-name">Предохранитель</div>
     </div>
     <div class="component" draggable="true" data-type="counter">
+      <div class="hold-progress"></div>  <!-- новый круг -->
       <span>📊</span>
       <div class="component-name">Счётчик</div>
     </div>
@@ -247,6 +281,29 @@
       slot.style.background = 'rgba(15,23,42,0.5)';
       dragged.style.opacity = '1';
       checkChain();
+    });
+  });
+  let holdTimer;
+  components.forEach(comp => {  
+    comp.addEventListener('touchstart', (e) => {
+      // если уже тащим — не запускать
+      if (comp.style.opacity === '0.6') return;
+  
+      comp.classList.add('hold-active');
+  
+      holdTimer = setTimeout(() => {
+        // ничего не делаем — браузер сам начнёт drag после long-press
+      }, 800);  // просто для симметрии, можно убрать
+    }, { passive: true });
+  
+    comp.addEventListener('touchend', () => {
+      clearTimeout(holdTimer);
+      comp.classList.remove('hold-active');
+    });
+  
+    comp.addEventListener('touchmove', () => {
+      clearTimeout(holdTimer);
+      comp.classList.remove('hold-active');
     });
   });
   
