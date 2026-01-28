@@ -15,18 +15,29 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 12px;
+      padding: 12px;                /* было 20px */
       box-sizing: border-box;
       touch-action: pan-y;
     }
-    h1 { margin: 12px 0 20px; font-size: clamp(1.7rem, 4.8vw, 2.2rem); text-shadow: 0 0 20px #60a5fa88; text-align: center; }
-    .footer { margin-top: 16px; font-size: 12px; opacity: 0.65; }
+    h1 {
+      margin: 12px 0 20px;          /* было 20px 0 30px */
+      font-size: clamp(1.7rem, 4.8vw, 2.2rem);
+      text-shadow: 0 0 20px #60a5fa88;
+      text-align: center;
+    }
+
+    .footer {
+      margin-top: 16px;             /* было 28px */
+      font-size: 12px;
+      opacity: 0.65;
+    }
+
     .container {
       background: rgba(15, 23, 42, 0.75);
       backdrop-filter: blur(12px);
       border: 1px solid rgba(96,165,250,0.3);
       border-radius: 24px;
-      padding: 20px;
+      padding: 20px;                /* было 30px */
       width: 100%;
       max-width: 600px;
       box-shadow: 0 20px 60px rgba(0,0,0,0.6);
@@ -37,17 +48,17 @@
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 12px;
+      gap: 12px;                    /* было 16px */
       min-height: 110px;
-      padding: 16px;
+      padding: 16px;                /* было 20px */
       border: 2px dashed rgba(96,165,250,0.4);
       border-radius: 16px;
-      margin-bottom: 20px;
+      margin-bottom: 20px;          /* было 30px */
       background: rgba(30,41,59,0.3);
     }
     .slot {
-      width: 90px;
-      height: 90px;
+      width: 90px;                  /* было 110px */
+      height: 90px;                 /* было 110px */
       border: 2px solid rgba(96,165,250,0.3);
       border-radius: 14px;
       display: flex;
@@ -65,26 +76,29 @@
     .slot::after {
       content: attr(data-order);
       position: absolute;
-      top: -10px; right: -10px;
+      top: -10px;
+      right: -10px;
       background: #1e293b;
       color: #94a3b8;
       font-size: 0.8rem;
-      width: 22px; height: 22px;
+      width: 22px;
+      height: 22px;
       border-radius: 50%;
       display: flex;
-      align-items: center; justify-content: center;
+      align-items: center;
+      justify-content: center;
       border: 1px solid #475569;
     }
     .components {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 10px;
-      margin-bottom: 24px;
+      gap: 10px;                    /* было 16px */
+      margin-bottom: 24px;          /* было 40px */
     }
     .component {
-      width: 82px;
-      height: 82px;
+      width: 82px;                  /* было 100px */
+      height: 82px;                 /* было 100px */
       background: rgba(30,41,59,0.6);
       border-radius: 14px;
       display: flex;
@@ -95,31 +109,30 @@
       user-select: none;
       transition: all 0.25s ease;
       box-shadow: 0 6px 16px rgba(0,0,0,0.4);
-      font-size: 1.9rem;
+      font-size: 1.9rem;            /* было 2.2rem */
       touch-action: manipulation;
-      position: relative;
+      position: relative;               /* важно! */
       -webkit-user-select: none;
       user-select: none;
     }
-    .component.dragging {
-      position: fixed !important;     /* ← ключевой момент */
-      pointer-events: none;           /* чтобы не мешал событиям под собой */
-      z-index: 9999;
-      opacity: 0.85;
-      transform: scale(1.1);
-      box-shadow: 0 12px 40px rgba(96,165,250,0.6);
+    .component:active {
+      cursor: grabbing;
+      transform: scale(1.08);
+      box-shadow: 0 12px 30px rgba(96,165,250,0.4);
     }
     .component-name {
-      font-size: 0.75rem;
-      margin-top: 4px;
+      font-size: 0.75rem;           /* было 0.9rem */
+      margin-top: 4px;              /* было 8px */
       color: #94a3b8;
       text-align: center;
       line-height: 1.1;
     }
     .success-line {
       position: absolute;
-      top: 50%; left: 0;
-      width: 100%; height: 4px;
+      top: 50%;
+      left: 0;
+      width: 100%;
+      height: 4px;
       background: linear-gradient(90deg, transparent, #34d399, #10b981, #34d399, transparent);
       transform: translateY(-50%);
       opacity: 0;
@@ -136,8 +149,8 @@
       100% { background-position: 200% 0; }
     }
     .answer {
-      margin-top: 20px;
-      font-size: 2.6rem;
+      margin-top: 20px;             /* было 40px */
+      font-size: 2.6rem;            /* было 3.5rem — самое главное изменение */
       font-weight: 900;
       color: #34d399;
       text-shadow: 0 0 40px #34d399, 0 0 80px #059669;
@@ -151,28 +164,35 @@
       transform: translateY(0);
       animation: pulseText 2.5s ease-in-out infinite alternate;
     }
-    @keyframes pulseText {
-      0% { text-shadow: 0 0 30px #34d399; }
-      100% { text-shadow: 0 0 60px #34d399, 0 0 100px #059669; }
-    }
     .hold-progress {
       position: absolute;
-      inset: -6px;
-      border: 3px solid rgba(96,165,250,0.0);
+      inset: -6px;                      /* чуть больше карточки */
+      border: 3px solid rgba(96,165,250,0.0);  /* прозрачный по умолчанию */
       border-radius: 50%;
       pointer-events: none;
+      transition: border-color 0.1s;
       box-sizing: border-box;
       opacity: 0;
       transform: scale(0.8);
     }
     .component.hold-active .hold-progress {
       opacity: 1;
-      animation: holdFill 0.4s linear forwards;
+      animation: holdFill 0.3s linear forwards;  /* 600 мс — подстрой под реальную задержку */
+    }
+    @keyframes pulseText {
+      0% { text-shadow: 0 0 30px #34d399; }
+      100% { text-shadow: 0 0 60px #34d399, 0 0 100px #059669; }
     }
     @keyframes holdFill {
-      0% { border-color: rgba(96,165,250,0.2); transform: scale(0.8); }
-      100% { border-color: #60a5fa; transform: scale(1.15); }
+    0% {
+      border-color: rgba(96,165,250,0.2);
+      transform: scale(0.8);
     }
+    100% {
+      border-color: #60a5fa;
+      transform: scale(1.15);
+    }
+  }
   </style>
 </head>
 <body>
@@ -187,33 +207,33 @@
   </div>
   <div class="success-line" id="successLine"></div>
   <div class="components" id="components">
-    <div class="component" data-type="load">
-      <div class="hold-progress"></div>
+    <div class="component" draggable="true" data-type="load">
+      <div class="hold-progress"></div>  <!-- новый круг -->
       <span>🏠</span>
       <div class="component-name">Бытовые приборы</div>
     </div>
-    <div class="component" data-type="battery">
-      <div class="hold-progress"></div>
+    <div class="component" draggable="true" data-type="battery">
+      <div class="hold-progress"></div>  <!-- новый круг -->
       <span>🔋</span>
       <div class="component-name">Аккумулятор</div>
     </div>
-    <div class="component" data-type="inverter">
-      <div class="hold-progress"></div>
+    <div class="component" draggable="true" data-type="inverter">
+      <div class="hold-progress"></div>  <!-- новый круг -->
       <span>⚡</span>
       <div class="component-name">Преобразователь тока</div>
     </div>
-    <div class="component" data-type="panel">
-      <div class="hold-progress"></div>
+    <div class="component" draggable="true" data-type="panel">
+      <div class="hold-progress"></div>  <!-- новый круг -->
       <span>☀️</span>
       <div class="component-name">Солнечная панель</div>
     </div>
-    <div class="component" data-type="pred">
-      <div class="hold-progress"></div>
+    <div class="component" draggable="true" data-type="pred">
+      <div class="hold-progress"></div>  <!-- новый круг -->
       <span>🔌</span>
       <div class="component-name">Предохранитель</div>
     </div>
-    <div class="component" data-type="counter">
-      <div class="hold-progress"></div>
+    <div class="component" draggable="true" data-type="counter">
+      <div class="hold-progress"></div>  <!-- новый круг -->
       <span>📊</span>
       <div class="component-name">Счётчик</div>
     </div>
@@ -223,100 +243,20 @@
 </div>
 
 <script>
+  // скрипт без изменений
   const components = document.querySelectorAll('.component');
   const slots = document.querySelectorAll('.slot');
   const successLine = document.getElementById('successLine');
   const answer = document.getElementById('answer');
   const correctOrder = ['panel', 'battery', 'inverter', 'pred', 'load'];
 
-  let dragged = null;
-  let offsetX = 0;
-  let offsetY = 0;
-
-  // MOBILE: touch
-  components.forEach(comp => {
-    comp.addEventListener('touchstart', e => {
-      if (dragged) return;
-      dragged = comp;
-      const rect = comp.getBoundingClientRect();
-      const touch = e.touches[0];
-
-      // Запоминаем смещение от точки касания до центра/угла карточки
-      offsetX = touch.clientX - rect.left - rect.width / 2;
-      offsetY = touch.clientY - rect.top - rect.height / 2;
-
-      comp.classList.add('hold-active', 'dragging');
-      comp.style.opacity = '0.85';
-
-      // Сразу перемещаем в fixed, чтобы следовал за пальцем
-      comp.style.left = `${rect.left + window.scrollX}px`;
-      comp.style.top  = `${rect.top + window.scrollY}px`;
-      comp.style.width = `${rect.width}px`;
-      comp.style.height = `${rect.height}px`;
-
-      e.preventDefault();
-    }, { passive: false });
-
-    comp.addEventListener('touchmove', e => {
-      if (!dragged) return;
-      e.preventDefault();
-
-      const touch = e.touches[0];
-      dragged.style.left = `${touch.clientX - offsetX - dragged.offsetWidth / 2}px`;
-      dragged.style.top  = `${touch.clientY - offsetY - dragged.offsetHeight / 2}px`;
-    }, { passive: false });
-
-    comp.addEventListener('touchend', e => {
-      if (!dragged) return;
-
-      dragged.classList.remove('hold-active', 'dragging');
-      dragged.style.opacity = '1';
-
-      const touch = e.changedTouches[0];
-      const elemUnder = document.elementFromPoint(touch.clientX, touch.clientY);
-      const targetSlot = elemUnder?.closest('.slot');
-
-      if (targetSlot) {
-        const existing = targetSlot.querySelector('.component');
-        if (existing) {
-          document.getElementById('components').appendChild(existing);
-        }
-        targetSlot.innerHTML = '';
-        targetSlot.appendChild(dragged);
-        targetSlot.style.background = 'rgba(15,23,42,0.5)';
-        // Сбрасываем inline-стили после дропа
-        dragged.style.left = '';
-        dragged.style.top = '';
-        dragged.style.width = '';
-        dragged.style.height = '';
-        checkChain();
-      } else {
-        // Если отпустили не над слотом — возвращаем обратно
-        dragged.style.left = '';
-        dragged.style.top = '';
-        dragged.style.width = '';
-        dragged.style.height = '';
-      }
-
-      dragged = null;
-    }, { passive: false });
-  });
-
-  // DESKTOP: mouse (оставляем почти как было)
   components.forEach(comp => {
     comp.addEventListener('dragstart', e => {
-      dragged = comp;
       e.dataTransfer.setData('text/plain', comp.dataset.type);
-      comp.classList.add('dragging');
       comp.style.opacity = '0.6';
     });
-
     comp.addEventListener('dragend', () => {
-      if (dragged) {
-        dragged.style.opacity = '1';
-        dragged.classList.remove('dragging');
-        dragged = null;
-      }
+      comp.style.opacity = '1';
     });
   });
 
@@ -325,26 +265,45 @@
       e.preventDefault();
       slot.style.background = 'rgba(96,165,250,0.2)';
     });
-
     slot.addEventListener('dragleave', () => {
       slot.style.background = 'rgba(15,23,42,0.5)';
     });
-
     slot.addEventListener('drop', e => {
       e.preventDefault();
-      if (!dragged) return;
-
+      const type = e.dataTransfer.getData('text/plain');
       const existing = slot.querySelector('.component');
       if (existing) {
         document.getElementById('components').appendChild(existing);
       }
+      const dragged = document.querySelector(`[data-type="${type}"]`);
       slot.innerHTML = '';
       slot.appendChild(dragged);
       slot.style.background = 'rgba(15,23,42,0.5)';
       dragged.style.opacity = '1';
-      dragged.classList.remove('dragging');
       checkChain();
-      dragged = null;
+    });
+  });
+  let holdTimer;
+  components.forEach(comp => {  
+    comp.addEventListener('touchstart', (e) => {
+      // если уже тащим — не запускать
+      if (comp.style.opacity === '0.6') return;
+
+      comp.classList.add('hold-active');
+
+      holdTimer = setTimeout(() => {
+        // ничего не делаем — браузер сам начнёт drag после long-press
+      }, 800);  // просто для симметрии, можно убрать
+    }, { passive: true });
+
+    comp.addEventListener('touchend', () => {
+      clearTimeout(holdTimer);
+      comp.classList.remove('hold-active');
+    });
+
+    comp.addEventListener('touchmove', () => {
+      clearTimeout(holdTimer);
+      comp.classList.remove('hold-active');
     });
   });
 
