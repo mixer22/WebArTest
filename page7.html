@@ -232,22 +232,6 @@
   animation: bounce 2s infinite;
 }
 
-.hint-close {
-  margin-left: auto;
-  background: none;
-  border: none;
-  color: #94a3b8;
-  font-size: 1.5rem;
-  cursor: pointer;
-  padding: 0 4px;
-  opacity: 0.7;
-  transition: opacity 0.2s;
-}
-
-.hint-close:hover {
-  opacity: 1;
-}
-
 @keyframes bounce {
   0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
   40% { transform: translateY(-8px); }
@@ -270,7 +254,6 @@
   <div class="hint-content">
     <span class="hint-icon">👆</span>
     <span class="hint-text">Удерживайте элемент пальцем, чтобы перетащить</span>
-    <button class="hint-close" id="hintClose">×</button>
   </div>
   <div class="success-line" id="successLine"></div>
   <div class="components" id="components">
@@ -392,26 +375,6 @@ if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
   const hint = document.getElementById('mobileHint');
   const closeBtn = document.getElementById('hintClose');
   
-  // Проверяем, показывали ли уже подсказку (localStorage)
-  if (!localStorage.getItem('chainHintShown')) {
-    setTimeout(() => {
-      hint.classList.add('show');
-    }, 800);
-    
-    localStorage.setItem('chainHintShown', 'true');
-  }
-
-  // Закрытие по кнопке или по клику вне
-  closeBtn.addEventListener('click', () => {
-    hint.classList.remove('show');
-  });
-
-  hint.addEventListener('click', (e) => {
-    if (e.target === hint) {
-      hint.classList.remove('show');
-    }
-  });
-}
 </script><!-- Всплывающая подсказка для мобильных -->
 </div>
 </body>
