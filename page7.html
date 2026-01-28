@@ -109,6 +109,7 @@
       transition: all 0.25s ease;
       box-shadow: 0 6px 16px rgba(0,0,0,0.4);
       font-size: 1.9rem;            /* было 2.2rem */
+      touch-action: manipulation;
     }
     .component:active {
       cursor: grabbing;
@@ -166,13 +167,13 @@
   </style>
 </head>
 <body>
-<h1>Собери минимально рабочую цепь питания</h1>
+<h1>Проведи питание от источника к потребителю (минимум нужных компонентов).</h1>
 <div class="container">
   <div class="target-chain" id="targetChain">
     <div class="slot" data-order="1" data-expected="panel"></div>
-    <div class="slot" data-order="2" data-expected="controller"></div>
-    <div class="slot" data-order="3" data-expected="battery"></div>
-    <div class="slot" data-order="4" data-expected="inverter"></div>
+    <div class="slot" data-order="2" data-expected="battery"></div>
+    <div class="slot" data-order="3" data-expected="inverter"></div>
+    <div class="slot" data-order="4" data-expected="pred"></div>
     <div class="slot" data-order="5" data-expected="load"></div>
   </div>
   <div class="success-line" id="successLine"></div>
@@ -187,11 +188,7 @@
     </div>
     <div class="component" draggable="true" data-type="inverter">
       <span>⚡</span>
-      <div class="component-name">Инвертор</div>
-    </div>
-    <div class="component" draggable="true" data-type="controller">
-      <span>🎛️</span>
-      <div class="component-name">Контроллер</div>
+      <div class="component-name">Преобразователь тока</div>
     </div>
     <div class="component" draggable="true" data-type="panel">
       <span>☀️</span>
@@ -216,7 +213,7 @@
   const slots = document.querySelectorAll('.slot');
   const successLine = document.getElementById('successLine');
   const answer = document.getElementById('answer');
-  const correctOrder = ['panel', 'controller', 'battery', 'inverter', 'load'];
+  const correctOrder = ['panel', 'battery', 'inverter', 'pred', 'load'];
   
   components.forEach(comp => {
     comp.addEventListener('dragstart', e => {
