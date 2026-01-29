@@ -122,16 +122,17 @@
     }
  .component-name {
   font-size: clamp(0.68rem, 2.1vw, 0.73rem);
-  line-height: 1.05;
+  line-height: 1.05;                    /* 1.0–1.1 оптимально */
   margin-top: 2px;
-  padding: 0 4px;
-  max-width: 100%;
-  white-space: nowrap;
+  padding: 0 3px;
+  width: 100%;
+  max-height: 2.3em;                    /* ≈ 2 строки */
   overflow: hidden;
   display: -webkit-box;
-  -webkit-line-clamp: 2;       /* максимум 2 строки */
+  -webkit-line-clamp: 2;                /* ← максимум 2 строки */
   -webkit-box-orient: vertical;
   text-overflow: ellipsis;
+  text-align: center;
 }
     .hint-text {
   text-align: center;
