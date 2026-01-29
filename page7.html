@@ -121,11 +121,14 @@
       box-shadow: 0 12px 30px rgba(96,165,250,0.4);
     }
     .component-name {
-      font-size: 0.75rem;           /* было 0.9rem */
-      margin-top: 4px;              /* было 8px */
-      color: #94a3b8;
-      text-align: center;
-      line-height: 1.1;
+      font-size: clamp(0.68rem, 2.1vw, 0.73rem);   /* было 0.75rem */
+      line-height: 1.05;                            /* чуть плотнее */
+      padding: 0 4px;                               /* добавляем внутренние отступы */
+      max-width: 100%;                              /* не даём вылезти */
+      overflow: hidden;
+      text-overflow: ellipsis;                      /* … если всё-таки не влезло */
+      white-space: nowrap;                          /* в одну строку */
+      margin-top: 2px;                              /* было 4px — чуть ближе к иконке */
     }
     .hint-text {
   text-align: center;
