@@ -97,8 +97,8 @@
       margin-bottom: 24px;          /* было 40px */
     }
     .component {
-      width: 82px;                  /* было 100px */
-      height: 82px;                 /* было 100px */
+      width: 78px;                  /* было 100px */
+      height: 782px;                 /* было 100px */
       background: rgba(30,41,59,0.6);
       border-radius: 14px;
       display: flex;
@@ -120,16 +120,14 @@
       transform: scale(1.08);
       box-shadow: 0 12px 30px rgba(96,165,250,0.4);
     }
-    .component-name {
-  font-size: clamp(0.65rem, 1.9vw, 0.72rem);
-  line-height: 1;
+ .component-name {
+  font-size: clamp(0.68rem, 2.1vw, 0.73rem);
+  line-height: 1.05;
   margin-top: 2px;
-  padding: 0 3px;
-  max-height: 2.1em;           /* ограничиваем высоту */
+  padding: 0 4px;
+  max-width: 100%;
+  white-space: nowrap;
   overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;       /* максимум 2 строки */
-  -webkit-box-orient: vertical;
   text-overflow: ellipsis;
 }
     .hint-text {
